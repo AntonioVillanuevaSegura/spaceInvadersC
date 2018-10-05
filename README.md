@@ -1,2 +1,2 @@
 # spaceInvaders
-Un intento de crear en widgets este gran juegp
+Un experimento  de crear en wxWidgets este gran juegp
