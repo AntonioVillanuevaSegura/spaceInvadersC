@@ -10,7 +10,7 @@ class Marciano{
 	
     wxImage marciano;//cargar dos imagenes 
     wxBitmap resize;
-	wxPoint posicion;//Posicion marciano
+	wxPoint pt;//Posicion marciano
 	bool vivo;//Esta vivo o muerto ?
 	int factor;//factor de ampliacion
 	
@@ -29,6 +29,7 @@ class Marciano{
 
 Marciano::Marciano(wxString file,  wxPoint pt,wxBitmapType format){//Constructor
 	factor=5;
+	this->pt=pt;
 	vivo=true; 
 	marciano.LoadFile(file, format);	//Carga el fichero 
 	resized();//Reescala las figuras 
@@ -37,7 +38,7 @@ Marciano::Marciano(wxString file,  wxPoint pt,wxBitmapType format){//Constructor
 /********************************************************************************/
 wxImage Marciano::getImagen(){return marciano;}
 /********************************************************************************/	
-wxPoint Marciano::getPosicion(){ return posicion;}
+wxPoint Marciano::getPosicion(){ return pt;}
 /********************************************************************************/	
 bool Marciano::getVivo(){return vivo;}
 /********************************************************************************/	
@@ -86,11 +87,14 @@ END_EVENT_TABLE()
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent){
 	//pantalla= wxImage(800,600,false);//Crea un fondo de pantalla 
+	factor=10*7;
 	pantalla.Create(800,600,true);//Crea un fondo de pantalla negro
 	
 	for (int n=1;n<=12;n++){//Crea 12
-		marcianos.push_back(Marciano(dir"Alien1.xpm",pto));//Crea vector marcianos
-		
+		marcianos.push_back(Marciano(dir"Alien1.xpm",creaPos(n)));//Crea vector marcianos
+		//cout <<"pos " <<creaPos(n).x <<","<<creaPos(n).x<<endl;		
+		//cout <<"pos x =" <<marcianos[n-1].getPosicion().x<<endl;
+		//cout <<"pos y =" <<marcianos[n-1].getPosicion().y<<endl;		
 	}
 	
 	if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
@@ -121,13 +125,17 @@ void Juego::render(wxDC& dc){
     dc.GetSize( &neww, &newh );
     
     //Copia marcianos en la pantalla  wxDC
-    dc.DrawBitmap(marcianos[0].getImagen(),1,1,true); //ok pinta en dc
+    for (int n=0;n<=11;n++){
+		dc.DrawBitmap(marcianos[n].getImagen(),
+		marcianos[n].getPosicion(),true); //ok pinta en dc
+	}
 
 }
 /********************************************************************************/
 wxPoint Juego::creaPos(int n){//crea coordenadas marciano
 	int x(n*factor);
-	int y(n*factor);	
+	//int y(n*factor);	
+	int y(0);
 	
 	return wxPoint (x,y);
 }
