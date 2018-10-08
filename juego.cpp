@@ -42,12 +42,11 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
    for (auto et:marcianos){
 		//dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);
 		//Mueve marciano
-		x=et.getPosicion().x;
-		y=et.getPosicion().y;
+		x=et.getPosicion().x;//Obtiene x
+		y=et.getPosicion().y;//Obitiene y
+		cout <<"marciano "<<x<<endl;
 		
-		et.setPosicion(sentido ? wxPoint(++x,y) : wxPoint(--x,y)); 
-
-		//et.setPosicion (sentido ? et.getPosicion().x+1, : et.getPosicion());
+		et.setPosicion(sentido ? wxPoint(x+1,y) : wxPoint(x-1,y)); //Nueva posicion en funcion del sentido
 	}
 	paintNow();
 }
@@ -72,10 +71,11 @@ void Juego::OnSize(wxSizeEvent& event){
 void Juego::render(wxDC& dc){
 	//int neww, newh;
     //dc.GetSize( &neww, &newh );
-    
+    cout <<"Test render" <<endl;
+    dc.Clear();
     //Copia marcianos desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){
-		dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);
+		dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);//Dibuja con el factor de ampliacion
 	}
 }
 /********************************************************************************/
