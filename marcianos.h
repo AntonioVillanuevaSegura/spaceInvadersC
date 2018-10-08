@@ -15,22 +15,26 @@ using namespace std;
 /********************************************************************************/
 /********************************************************************************/
 class Marciano{
-	
-    wxImage marciano;//cargar  imagenes 
+
+    wxImage marcianoA,marcianoB,explosion;//cargar  imagenes 
     wxBitmap resize;
 	wxPoint pt;//Posicion marciano
+	wxPoint disparo;//Posicion del disparo
+
 	bool vivo;//Esta vivo o muerto ?
-	int factor;//factor de ampliacion
+	
+	int factor;//factor de ampliacion en la reescala
 	
 	public:
 	
 	Marciano();
-	Marciano(wxString file, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor 
-	wxImage getImagen();
+	Marciano(wxString posA,wxString posB,wxString exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor 
+	wxImage getImagen();//Trabajar segun valor de x primer elemento p.e
 	wxPoint getPosicion();
+	
 	void setPosicion();	
 	bool getVivo();
-	wxImage resized();//Reescala marcianos
+	wxImage resized(wxImage marciano);//Reescala marcianos
 
 };
 /***************************  DEFINICIONES  *************************************/

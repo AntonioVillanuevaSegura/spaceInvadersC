@@ -11,4 +11,10 @@ sino puntos extras en cantidades aleatorias.
 Además se tienen cuatros escudos de protección terrestre (más parecidos a búnkeres) que cubren al jugador del fuego alienígena, 
 pero que son destruidos gradualmente por los disparos de los invasores y el cañón del jugador.
 
+Referencias 
 
+http://computerarcheology.com/Arcade/SpaceInvaders/Code.html
+https://perso.esiee.fr/~perretb/I3FM/POO1/projet/index.html
+http://spaceinvaders.wikia.com/wiki/Space_Invaders
+http://gamecodeschool.com/android/coding-a-space-invaders-game
+https://www.youtube.com/watch?v=D1jZaIPeD5w

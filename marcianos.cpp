@@ -1,22 +1,30 @@
 #include "marcianos.h"
 /***************************  DEFINICIONES  *************************************/
 /********************************************************************************/
-Marciano::Marciano(wxString file,  wxPoint pt,wxBitmapType format){//Constructor
+Marciano::Marciano(wxString posA,wxString posB,wxString exp,  wxPoint pt,wxBitmapType format){//Constructor
 	factor=5;
 	this->pt=pt;
 	vivo=true; 
-	marciano.LoadFile(file, format);	//Carga el fichero 
-	resized();//Reescala las figuras 
-    if (marciano.IsOk()){cout<<" OK LOADING IMAGE "<<endl;}
+	marcianoA.LoadFile(posA, format);	//Carga el fichero imagen
+	marcianoA=resized(marcianoA);//Reescala las figuras 
+	
+	marcianoB.LoadFile(posB, format);	//Carga el fichero imagen
+	marcianoB=resized(marcianoB);//Reescala las figuras 
+	
+	explosion.LoadFile(exp, format);	//Carga el fichero imagen
+	explosion=resized(marcianoA);//Reescala las figuras 
+	
+	
+    //if (marcianoA.IsOk()){cout<<" OK LOADING IMAGE "<<endl;}
 }
 /********************************************************************************/
-wxImage Marciano::getImagen(){return marciano;}
+wxImage Marciano::getImagen(){return pt.x%2!=0 ? marcianoA :marcianoB;}
 /********************************************************************************/	
 wxPoint Marciano::getPosicion(){ return pt;}
 /********************************************************************************/	
 bool Marciano::getVivo(){return vivo;}
 /********************************************************************************/	
-wxImage Marciano::resized(){//Reescala marciano , la base es el tamano real en xpm
+wxImage Marciano::resized(wxImage marciano){//Reescala marciano , la base es el tamano real en xpm
 		//int factor (4); //Multiplica el tamano por este valor 
 		resize = wxBitmap( marciano.Scale( marciano.GetWidth () *factor,
 											marciano.GetHeight ()*factor

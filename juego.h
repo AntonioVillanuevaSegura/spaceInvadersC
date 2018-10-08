@@ -4,19 +4,22 @@
 #ifndef JUEGO_H
 #define JUEGO_H
 #include "marcianos.h"
+#include <wx/timer.h> //timer
 
 class Juego :public wxPanel{
 	public:
 	Juego (wxFrame* parent);
 	
 	//Dibujo
+	void OnTimer(wxTimerEvent& event);//Timer
     void paintEvent(wxPaintEvent & evt);
     void paintNow();
     void OnSize(wxSizeEvent& event);
     void render(wxDC& dc);
-    wxPoint creaPos(int n);//crea coordenadas marciano
+    wxPoint creaPos(wxPoint pto);//crea coordenadas marciano
 		
 	private:
+	wxTimer m_timer;
     wxImage pantalla;//imagen de la pantalla
     wxBitmap resized;  
     int w, h;//Tamano pantalla
@@ -24,11 +27,15 @@ class Juego :public wxPanel{
     int creados;//N de marcianos a creas
     int factor ;//factor multiplicador
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
+    bool sentido;//sentido del movimiento de los marcianos
   
 	    DECLARE_EVENT_TABLE()
 };
 /********************************************************************************/
+wxWindowIDRef TIMER_ID=wxWindow::NewControlId();//Obtiene un numero ID para el timer
+
 BEGIN_EVENT_TABLE(Juego, wxPanel)
+	EVT_TIMER(TIMER_ID, Juego::OnTimer)
 	EVT_PAINT(Juego::paintEvent)
 	EVT_SIZE(Juego::OnSize)
 END_EVENT_TABLE()
