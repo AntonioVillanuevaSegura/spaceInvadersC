@@ -32,7 +32,8 @@ class Marciano{
 	wxImage getImagen();//Trabajar segun valor de x primer elemento p.e
 	wxPoint getPosicion();
 	
-	void setPosicion();	
+	void setPosicion(wxPoint pto);	
+
 	bool getVivo();
 	wxImage resized(wxImage marciano);//Reescala marcianos
 

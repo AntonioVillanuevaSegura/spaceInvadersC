@@ -21,6 +21,8 @@ Marciano::Marciano(wxString posA,wxString posB,wxString exp,  wxPoint pt,wxBitma
 wxImage Marciano::getImagen(){return pt.x%2!=0 ? marcianoA :marcianoB;}
 /********************************************************************************/	
 wxPoint Marciano::getPosicion(){ return pt;}
+/********************************************************************************/
+void Marciano::setPosicion(wxPoint pto){pt=pto;}
 /********************************************************************************/	
 bool Marciano::getVivo(){return vivo;}
 /********************************************************************************/	
