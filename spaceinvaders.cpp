@@ -23,7 +23,7 @@ public:
  
 		//Crea el frame
         wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-        frame = new wxFrame(NULL, wxID_ANY, wxT("Space Invaders"), wxPoint(50,50), wxSize(1000,800),wxDEFAULT_FRAME_STYLE & ~wxRESIZE_BORDER);//Frame
+        frame = new wxFrame(NULL, wxID_ANY, wxT("Space Invaders"), wxPoint(50,50), wxSize(1200,800),wxDEFAULT_FRAME_STYLE & ~wxRESIZE_BORDER);//Frame
 
         // Panel de dibujo ,llama el constructor de wxImagePanel que carga una imagen ....
         panelDibujo = new Juego( frame);

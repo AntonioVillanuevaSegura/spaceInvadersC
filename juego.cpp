@@ -2,34 +2,37 @@
 #include "juego.h"
 /********************************************************************************/
 /********************************************************************************/
-Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){
+Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Constructor del Juego
 	
-	m_timer.Start(1000); // Intervalo de 1 segundo en el timer
+	m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
+	pto=PuntoBase;//Primer marciano posicion 
 
-	factor=10*7;
-	pantalla.Create(800,600,true);//Crea un fondo de pantalla negro
+	factor=10*7;//Factor de adaptacion ,ampliacion 
+	
+	pantalla.Create(1200,800,true);//Crea un fondo de pantalla negro
 	
 	//Crea un vector de marcianos con sus coordenadas 
 	
-	for (int n=1;n<=12;n++){//Crea 1era. linea
-		marcianos.push_back(Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
+	//Crea 11 marcianos por linea
+	for (int n=1;n<=11;n++){//Crea 1era. linea
+		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
-	
-	for (int n=13;n<=24;n++){//Crea 2a. linea
+
+	for (int n=12;n<=22;n++){//Crea 2a. linea
 		marcianos.push_back(Marciano(dir"Alien1.xpm",dir"Alien1b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
-	for (int n=25;n<=36;n++){//Crea 3a. linea
+	for (int n=23;n<=33;n++){//Crea 3a. linea
 		marcianos.push_back(Marciano(dir"Alien1.xpm",dir"Alien1b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
-	for (int n=37;n<=48;n++){//Crea 4a. linea
+	for (int n=34;n<=44;n++){//Crea 4a. linea
 		marcianos.push_back(Marciano(dir"Alien0.xpm",dir"Alien0b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
-	for (int n=49;n<=60;n++){//Crea 5a. linea
+	for (int n=45;n<=55;n++){//Crea 5a. linea
 		marcianos.push_back(Marciano(dir"Alien0.xpm",dir"Alien0b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}	
-	
+
 	
 	if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
 	
@@ -39,16 +42,12 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){
 
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
-	cout <<" Test Timer "<<endl;
-	int x,y;
-   for (auto et:marcianos){//lee el vector de marcianos 
-		//dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);
-		//Mueve marciano
+	int x(0),y(0);	
+   for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
+		//Mueve marciano izq. o der.
 		x=et.getPosicion().x;//Obtiene x
 		y=et.getPosicion().y;//Obitiene y
-		//cout <<"marciano "<<x<<endl;
-		
-		et.setPosicion(sentido ? wxPoint(x+2,y) : wxPoint(x-2,y)); //Nueva posicion en funcion del sentido
+		et.setPosicion(sentido ? wxPoint(x+1,y) : wxPoint(x-1,y)); //Nueva posicion en funcion del sentido
 	}
 	paintNow();
 }
@@ -71,9 +70,6 @@ void Juego::OnSize(wxSizeEvent& event){
 }
 /********************************************************************************/
 void Juego::render(wxDC& dc){
-	//int neww, newh;
-    //dc.GetSize( &neww, &newh );
-    cout <<"Test render" <<endl;
     dc.Clear();
     //Copia marcianos desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){
@@ -81,16 +77,12 @@ void Juego::render(wxDC& dc){
 	}
 }
 /********************************************************************************/
-wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano
+wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 
-	if (pt.x<12){ pt.x++; }
+	if (pt.x<PuntoBase.x+11){ pt.x++; }//linea de marcianos hasta 11 
 	else {
-		pt.x=1 ;//Coordenada x del primer marciano
+		pt.x=PuntoBase.x+1 ;//Coordenada x del primer marciano mas su incremento
 		pt.y++;}//Salta una linea
-		
-	//La correccion la efectuamos en el momento de imprimir la imagen en render 	
-	//pt.x*=factor;//correccion en funcion del factor de ampliacion
-	//pt.y*=factor;//correccion en funcion del factor de ampliacion
 
 	return pt;
 }

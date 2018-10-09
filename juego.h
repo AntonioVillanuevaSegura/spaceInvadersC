@@ -6,9 +6,11 @@
 #include "marcianos.h"
 #include <wx/timer.h> //timer
 
+const wxPoint PuntoBase(2,0);//Primera coordenada de un marciano
+
 class Juego :public wxPanel{
 	public:
-	Juego (wxFrame* parent);
+	Juego (wxFrame* parent); //Constructor del Juego
 	
 	//Dibujo
 	void OnTimer(wxTimerEvent& event);//Timer
@@ -23,7 +25,7 @@ class Juego :public wxPanel{
     wxImage pantalla;//imagen de la pantalla
     wxBitmap resized;  
     int w, h;//Tamano pantalla
-    wxPoint pto;//Ultima coordenada de un marciano
+    wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
     int creados;//N de marcianos a creas
     int factor ;//factor multiplicador
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos

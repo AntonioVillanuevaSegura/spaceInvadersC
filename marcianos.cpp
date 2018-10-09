@@ -22,7 +22,7 @@ wxImage Marciano::getImagen(){return pt.x%2!=0 ? marcianoA :marcianoB;}
 /********************************************************************************/	
 wxPoint Marciano::getPosicion(){ return pt;}
 /********************************************************************************/
-void Marciano::setPosicion(wxPoint pto){pt=pto;}
+void Marciano::setPosicion(wxPoint pto){this->pt=pto;}
 /********************************************************************************/	
 bool Marciano::getVivo(){return vivo;}
 /********************************************************************************/	
@@ -35,4 +35,8 @@ wxImage Marciano::resized(wxImage marciano){//Reescala marciano , la base es el 
        marciano=resize.ConvertToImage();
 return marciano;//devuelve un wxImage
 }
-
+/********************************************************************************/	
+void Marciano::DebugMarciano(){//Para ver informacion 
+	cout <<" x ="<<getPosicion().x<<" , y = "<<getPosicion().y<<" --disp= "<<
+	disparo.x<<", "<<disparo.y<<endl;
+}

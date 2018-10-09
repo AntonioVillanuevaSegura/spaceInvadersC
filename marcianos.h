@@ -31,6 +31,7 @@ class Marciano{
 	Marciano(wxString posA,wxString posB,wxString exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor 
 	wxImage getImagen();//Trabajar segun valor de x primer elemento p.e
 	wxPoint getPosicion();
+	void DebugMarciano();//Para ver informacion 
 	
 	void setPosicion(wxPoint pto);	
 
