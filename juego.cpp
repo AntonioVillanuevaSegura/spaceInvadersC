@@ -112,3 +112,13 @@ bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos 
 	return false;
 }
 
+/********************************************************************************/
+bool limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
+		//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
+	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
+		return true;
+	} 
+	return false;
+	
+}
+

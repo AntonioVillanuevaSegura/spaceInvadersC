@@ -20,6 +20,7 @@ class Juego :public wxPanel{
     void render(wxDC& dc);
     wxPoint creaPos(wxPoint pto);//crea coordenadas marciano construccion
     bool limites();//Han llegado a la derecha o a la izquierda los marcianos ?
+    bool limiteInferior();//Han llegado abajo ? Han ganado los marcianos ?    
 		
 	private:
 	wxTimer m_timer;
