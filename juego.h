@@ -28,6 +28,7 @@ class Juego :public wxPanel{
     wxImage pantalla;//imagen de la pantalla
     wxBitmap resized;  
     int w, h;//Tamano pantalla
+    int score1,score2;//Puntos a enviar a menus 
     wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
     int creados;//N de marcianos a creas
     int factor ;//factor multiplicador

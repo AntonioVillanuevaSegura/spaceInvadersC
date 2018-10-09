@@ -1,7 +1,4 @@
-//http://computerarcheology.com/Arcade/SpaceInvaders/Code.html
-//https://perso.esiee.fr/~perretb/I3FM/POO1/projet/index.html
-//http://spaceinvaders.wikia.com/wiki/Space_Invaders
-//http://gamecodeschool.com/android/coding-a-space-invaders-game
+//Antonio Villanueva Segura  una version de spaceinvaders
 
 #include "marcianos.h"//Clase que define el marciano
 #include "juego.h"//Clase con el motor del juego 

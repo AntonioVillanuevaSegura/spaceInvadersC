@@ -27,7 +27,7 @@ void menus::cargaImagenes(wxString c){//Carga imagenes en el vector desde su cha
 	wxImage img;
 		directorio+=c;
 		directorio+=".xpm";		
-		cout <<" directorio leido "<<directorio<<endl;//debug
+		//cout <<" directorio leido "<<directorio<<endl;//debug
 		img.LoadFile(directorio, wxBITMAP_TYPE_XPM);//Carga una imagen
 		
 		img=resized(img);//Reescalar la imagen 
@@ -53,8 +53,8 @@ wxImage menus::resized(wxImage caracter){//Reescala marciano , la base es el tam
 return caracter;//devuelve un wxImage
 }
 /********************************************************************************/
-void menus::stringToImage(wxString texto,wxDC& dc){//"SCORE<1> HI-SCORE SCORE<2>"
-	int x(0),y(0);
+void menus::stringToImage(wxString texto,wxDC& dc,int x,int y){//"SCORE<1> HI-SCORE SCORE<2>"
+
 	for (char letra:texto){
 		//cout <<letra<<endl;//debug
 		dc.DrawBitmap(asciiToimage(letra),(++x)*factorPto,y*factorPto,true);
@@ -62,3 +62,10 @@ void menus::stringToImage(wxString texto,wxDC& dc){//"SCORE<1> HI-SCORE SCORE<2>
 	}
 }
 /********************************************************************************/
+void menus::scores(int A,int B,wxDC& dc,int x,int y){//Escribe scores
+	const int offset(18);
+	//traduce int to string std::to_string(num);
+	//std::to_string(A);
+	stringToImage(to_string(A),dc,x,y);
+	stringToImage(to_string(B),dc,x+offset,y);	
+}

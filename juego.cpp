@@ -92,7 +92,8 @@ void Juego::render(wxDC& dc){
     dc.Clear();
     
     //Copia informacion de fondo score
-    menu.stringToImage("score<1> hi-score score<2>",dc);
+    menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
+    menu.scores(222,333,dc,2,1);   //escribe scores ... valor valor dc x y
 
     //dc.DrawBitmap(menu.asciiToimage('a'),wxPoint(0,0),true);
     //Copia marcianos desde el vector hasta la pantalla  wxDC

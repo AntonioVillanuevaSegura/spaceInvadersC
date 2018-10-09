@@ -24,9 +24,10 @@ class menus{
 	menus();//Constructor de la clase ,carga letras lineas ...
 	void cargaFicheros(wxString directorio) ;//Carga la lista de nombres de ficheros a cargar 
 	wxBitmap asciiToimage(char c);//Una ascii  devuelve su imagen correspondiente
-	void stringToImage(wxString texto,wxDC& dc);//"SCORE<1> HI-SCORE SCORE<2>"
+	void stringToImage(wxString texto,wxDC& dc,int x=0,int y=0);//"SCORE<1> HI-SCORE SCORE<2>"
 	void cargaImagenes(wxString c);//Carga imagenes en el vector desde su char correspondiente
 	wxImage resized(wxImage caracter);//Reescala marciano , la base es el tamano real en xpm	
+	void scores(int A,int B,wxDC& dc,int x=0,int y=0);//Escribe scores
 };
 
 /***************************  DEFINICIONES  *************************************/
