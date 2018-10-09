@@ -9,6 +9,8 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){
 	factor=10*7;
 	pantalla.Create(800,600,true);//Crea un fondo de pantalla negro
 	
+	//Crea un vector de marcianos con sus coordenadas 
+	
 	for (int n=1;n<=12;n++){//Crea 1era. linea
 		marcianos.push_back(Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
@@ -39,14 +41,14 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	cout <<" Test Timer "<<endl;
 	int x,y;
-   for (auto et:marcianos){
+   for (auto et:marcianos){//lee el vector de marcianos 
 		//dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);
 		//Mueve marciano
 		x=et.getPosicion().x;//Obtiene x
 		y=et.getPosicion().y;//Obitiene y
-		cout <<"marciano "<<x<<endl;
+		//cout <<"marciano "<<x<<endl;
 		
-		et.setPosicion(sentido ? wxPoint(x+1,y) : wxPoint(x-1,y)); //Nueva posicion en funcion del sentido
+		et.setPosicion(sentido ? wxPoint(x+2,y) : wxPoint(x-2,y)); //Nueva posicion en funcion del sentido
 	}
 	paintNow();
 }
