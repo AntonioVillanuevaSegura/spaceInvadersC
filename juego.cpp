@@ -1,5 +1,6 @@
 
 #include "juego.h"
+
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Constructor del Juego
@@ -12,8 +13,9 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Const
 	pantalla.Create(1200,800,true);//Crea un fondo de pantalla negro
 	
 	//Crea un vector de marcianos con sus coordenadas 
+	menus m;
 	
-	//Crea 11 marcianos por linea
+	//Crea 11 marcianos por linea 11*5= 55 total
 	for (int n=1;n<=11;n++){//Crea 1era. linea
 		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
@@ -88,6 +90,11 @@ void Juego::OnSize(wxSizeEvent& event){
 /********************************************************************************/
 void Juego::render(wxDC& dc){
     dc.Clear();
+    
+    //Copia informacion de fondo score
+    menu.stringToImage("SCORE<1>   HI-SCORE   SCORE<2>",dc);
+
+    //dc.DrawBitmap(menu.asciiToimage('a'),wxPoint(0,0),true);
     //Copia marcianos desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){
 		dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);//Dibuja con el factor de ampliacion
@@ -113,8 +120,12 @@ bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos 
 }
 
 /********************************************************************************/
-bool limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
+bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
 		//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
+		
+		//SE TIENE QUE DEFINIR .....!!!
+		
+		
 	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
 		return true;
 	} 

@@ -4,9 +4,10 @@
 #ifndef JUEGO_H
 #define JUEGO_H
 #include "marcianos.h"
+#include "menus.h"
 #include <wx/timer.h> //timer
 
-const wxPoint PuntoBase(2,0);//Primera coordenada de un marciano
+const wxPoint PuntoBase(2,2);//Primera coordenada de un marciano
 
 class Juego :public wxPanel{
 	public:
@@ -31,6 +32,7 @@ class Juego :public wxPanel{
     int creados;//N de marcianos a creas
     int factor ;//factor multiplicador
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
+    menus menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos
   
 	    DECLARE_EVENT_TABLE()
