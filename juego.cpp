@@ -33,6 +33,7 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Const
 		marcianos.push_back(Marciano(dir"Alien0.xpm",dir"Alien0b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}	
 
+	pto=PuntoBase;//Reset punto de referencia 
 	
 	if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
 	
@@ -45,17 +46,25 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 	int x(0),y(0);	
 	
 	if (limites()){//Los marcianos estan en el limite <-der o izq -> ?
-		//incrementa y
-		//cambia el sentido de la marcha
-		sentido=!sentido;
-		//cout <<"cambio de sentido "<<endl;
+		//incrementa y 
+		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!		
+			x=et.getPosicion().x;//Obtiene X del marciano corriente 		
+			y= et.getPosicion().y;//Obitiene Y del marciano corriente
 		
+			//Nueva posicion en Y marciano bajan
+			et.setPosicion(wxPoint(x,++y));//Actualiza solo Y 
+		}
+		//cambia el sentido de la marcha
+		sentido=!sentido;		
 	}
+	
    for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
 		//Mueve marciano izq. o der.
-		x=et.getPosicion().x;//Obtiene x
-		y=et.getPosicion().y;//Obitiene y
-		et.setPosicion(sentido ? wxPoint(x+1,y) : wxPoint(x-1,y)); //Nueva posicion en funcion del sentido
+		x=et.getPosicion().x;//Obtiene X del marciano corriente 		
+		y= et.getPosicion().y;//Obitiene Y del marciano corriente
+		
+		//Nueva posicion del marciano en funcion del sentido
+		et.setPosicion(sentido ? wxPoint(x+1,y) : wxPoint(x-1,y));
 	}
 	paintNow();
 }
@@ -97,7 +106,7 @@ wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 /********************************************************************************/
 bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
-	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+11){
+	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
 		return true;
 	} 
 	return false;
