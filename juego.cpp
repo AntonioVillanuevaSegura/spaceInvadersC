@@ -43,6 +43,14 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Const
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	int x(0),y(0);	
+	
+	if (limites()){//Los marcianos estan en el limite <-der o izq -> ?
+		//incrementa y
+		//cambia el sentido de la marcha
+		sentido=!sentido;
+		//cout <<"cambio de sentido "<<endl;
+		
+	}
    for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
 		//Mueve marciano izq. o der.
 		x=et.getPosicion().x;//Obtiene x
@@ -85,5 +93,13 @@ wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 		pt.y++;}//Salta una linea
 
 	return pt;
+}
+/********************************************************************************/
+bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
+	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
+	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+11){
+		return true;
+	} 
+	return false;
 }
 
