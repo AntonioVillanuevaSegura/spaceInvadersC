@@ -37,6 +37,7 @@ class Juego :public wxPanel{
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
     menus menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos
+    bool imgActual;//imagen que utiliza el marciano imgA o imgB
   
 	    DECLARE_EVENT_TABLE()
 };

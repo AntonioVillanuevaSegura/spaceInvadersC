@@ -18,7 +18,7 @@ Marciano::Marciano(wxString posA,wxString posB,wxString exp,  wxPoint pt,wxBitma
     //if (marcianoA.IsOk()){cout<<" OK LOADING IMAGE "<<endl;}
 }
 /********************************************************************************/
-wxImage Marciano::getImagen(){return pt.x%2!=0 ? marcianoA :marcianoB;}
+wxImage Marciano::getImagen(bool img){return img ? marcianoA :marcianoB;}////Utiliza imgA o imgB segun bool
 /********************************************************************************/	
 wxPoint Marciano::getPosicion(){ return pt;}
 /********************************************************************************/

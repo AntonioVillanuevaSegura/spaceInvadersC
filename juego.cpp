@@ -92,21 +92,18 @@ void Juego::OnSize(wxSizeEvent& event){
 }
 /********************************************************************************/
 void Juego::render(wxDC& dc){
-   // dc.Clear();
-
- // dc.SetBrush(*wxBLACK);
-  dc.SetBackground( *wxBLACK );
-  //dc.SetPen( *wxWHITE );
-  dc.Clear();
-
-   
+ 
+	dc.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
+	dc.Clear();
+	
     //Copia informacion de fondo score
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
     menu.scores(222,333,dc,2,1);   //escribe scores ... valor valor dc x y
 
+	imgActual=!imgActual;//Imagen a utilizar la A o la B
     //Copia marcianos desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){
-		dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);//Dibuja con el factor de ampliacion
+		dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion()*factor,true);//Dibuja con el factor de ampliacion
 	}
 }
 /********************************************************************************/
