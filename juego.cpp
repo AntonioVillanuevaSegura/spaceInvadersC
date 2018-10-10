@@ -3,7 +3,7 @@
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
-nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(8,7))//Inicializa la nave 
+nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(8,9))//Inicializa la nave 
 { //Constructor del Juego
 		
 
@@ -95,11 +95,11 @@ void Juego::render(wxDC& dc){
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
     menu.scores(111,222,dc,2,1);   //escribe scores ... valor valor dc x y
     //menu.stringToImage("--------------------------",dc,0,17);
-    menu.dibujaLinea(0,17,30,17,dc);//Linia divisora inferior 
+    menu.dibujaLinea(0,18,30,18,dc);//Linia divisora inferior 
     
     //Dibuja nave 
-	dc.DrawBitmap(nave.getImagen(true),
-		nave.getPosicion()*factor,//version wxPoint  
+	dc.DrawBitmap(nave.getImagen(true), 
+		nave.getPosicion().x*factor,nave.getPosicion().y*factor*0.9,		
 		true);//Dibuja con el factor de ampliacion	
 	
 	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
