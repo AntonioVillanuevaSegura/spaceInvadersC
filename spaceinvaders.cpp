@@ -1,6 +1,7 @@
 //Antonio Villanueva Segura  una version de spaceinvaders
 
 #include "marcianos.h"//Clase que define el marciano
+#include "nave.h"//Clase que define una nave
 #include "juego.h"//Clase con el motor del juego 
 using namespace std;
 //#define dir "./spaceInvaders/"

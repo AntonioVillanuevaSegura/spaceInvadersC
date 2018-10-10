@@ -1,11 +1,9 @@
-
 #include "juego.h"
-
 
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
-nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(8,10))//Inicializa la nave 
+nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(8,7))//Inicializa la nave 
 { //Constructor del Juego
 		
 
@@ -100,10 +98,10 @@ void Juego::render(wxDC& dc){
     menu.dibujaLinea(0,17,30,17,dc);//Linia divisora inferior 
     
     //Dibuja nave 
-	dc.DrawBitmap(nave.getImagen(false),
+	dc.DrawBitmap(nave.getImagen(true),
 		nave.getPosicion()*factor,//version wxPoint  
 		true);//Dibuja con el factor de ampliacion	
-
+	
 	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
     //Copia marcianos desde el vector hasta la pantalla  wxDC
