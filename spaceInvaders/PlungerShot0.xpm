@@ -1,8 +1,8 @@
 /* XPM */
 static char * PlungerShot0_xpm[] = {
 "3 8 2 1",
-" 	g None",
-".	g #000000",
+" 	g #000000",
+".	g #ffffff",
 " . ",
 " . ",
 " . ",
