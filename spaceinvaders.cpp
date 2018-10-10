@@ -31,7 +31,6 @@ public:
         frame->Show();
         return true;
     } 
-
 };
  
 IMPLEMENT_APP(Run)

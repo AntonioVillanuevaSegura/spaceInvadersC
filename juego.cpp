@@ -5,20 +5,17 @@
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Constructor del Juego
-	
-	
-	//parent->SetForegroundColour(wxColour(* wxBLACK));
-	//parent->SetBackgroundColour(wxColour(* wxBLACK));	
+		
 
 	m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
 
 	factor=SEPARACION_OBJETOS_B;//Factor de adaptacion ,ampliacion 
 	
-	//pantalla.Create(1200,800,false);//Crea un fondo de pantalla negro
-	
 	//Crea un vector de marcianos con sus coordenadas	
 	//Crea 11 marcianos por linea 11*5= 55 total
+
+
 	for (int n=1;n<=11;n++){//Crea 1era. linea
 		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
@@ -39,6 +36,7 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Const
 	}	
 
 	pto=PuntoBase;//Reset punto de referencia 
+
 	
 	//if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
 	
@@ -62,6 +60,8 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 		//cambia el sentido de la marcha
 		sentido=!sentido;		
 	}
+	
+	if (limiteInferior()){resetMarcianos();} //Han llegado abajo reseteamos los marcianos	
 	
    for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
 		//Mueve marciano izq. o der.
@@ -96,14 +96,18 @@ void Juego::render(wxDC& dc){
 	dc.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
 	dc.Clear();
 	
-    //Copia informacion de fondo score
+    //Copia informacion de fondo pantall, "score"
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
-    menu.scores(222,333,dc,2,1);   //escribe scores ... valor valor dc x y
+    menu.scores(111,222,dc,2,1);   //escribe scores ... valor valor dc x y
 
-	imgActual=!imgActual;//Imagen a utilizar la A o la B
+	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
+	
     //Copia marcianos desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){
-		dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion()*factor,true);//Dibuja con el factor de ampliacion
+		dc.DrawBitmap(et.getImagen(imgActual),
+		//et.getPosicion()*factor,//version wxPoint 
+		et.getPosicion().x*factor,et.getPosicion().y*factor*(0.6),//version x,y 
+		true);//Dibuja con el factor de ampliacion	
 	}
 }
 /********************************************************************************/
@@ -119,22 +123,25 @@ wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 /********************************************************************************/
 bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
-	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
+	
+	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+11){
 		return true;
 	} 
 	return false;
 }
 /********************************************************************************/
 bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
-		//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
-		
-		//SE TIENE QUE DEFINIR .....!!!
-		
-		
-	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
-		return true;
-	} 
-	return false;
-	
+	//Analiza  marciano inferior para analizar y 
+					
+	if (marcianos[44].getPosicion().y > PuntoBase.y + 10){return true;}	 
+	return false;	
 }
-
+/********************************************************************************/
+void Juego::resetMarcianos(){//Posicion inicial marcianos,vidas ..
+	for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!						
+			et.setPosicion(pto=creaPos(pto));//Actualiza solo Y 
+		}
+		//cambia el sentido de la marcha
+		//sentido=!sentido;	
+}
+/********************************************************************************/

@@ -7,7 +7,7 @@
 #include "menus.h"
 #include <wx/timer.h> //timer
 
-#define SEPARACION_OBJETOS_B 10*7;//Factor de adaptacion ,ampliacion
+#define SEPARACION_OBJETOS_B 10*8;//Factor de adaptacion ,ampliacion
 
 const wxPoint PuntoBase(2,2);//Primera coordenada de un marciano
 
@@ -38,6 +38,7 @@ class Juego :public wxPanel{
     menus menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos
     bool imgActual;//imagen que utiliza el marciano imgA o imgB
+    void resetMarcianos();//Posicion inicial ,vidas ..
   
 	    DECLARE_EVENT_TABLE()
 };
