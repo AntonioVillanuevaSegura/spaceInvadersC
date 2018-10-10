@@ -1,20 +1,23 @@
 
 #include "juego.h"
 
+
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Constructor del Juego
 	
+	
+	//parent->SetForegroundColour(wxColour(* wxBLACK));
+	//parent->SetBackgroundColour(wxColour(* wxBLACK));	
+
 	m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
 
-	factor=10*7;//Factor de adaptacion ,ampliacion 
+	factor=SEPARACION_OBJETOS_B;//Factor de adaptacion ,ampliacion 
 	
-	pantalla.Create(1200,800,true);//Crea un fondo de pantalla negro
+	//pantalla.Create(1200,800,false);//Crea un fondo de pantalla negro
 	
-	//Crea un vector de marcianos con sus coordenadas 
-	menus m;
-	
+	//Crea un vector de marcianos con sus coordenadas	
 	//Crea 11 marcianos por linea 11*5= 55 total
 	for (int n=1;n<=11;n++){//Crea 1era. linea
 		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
@@ -37,10 +40,10 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Const
 
 	pto=PuntoBase;//Reset punto de referencia 
 	
-	if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
+	//if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
 	
-	w = -1;
-    h = -1;
+	//w = -1;
+    //h = -1;
 }
 
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
@@ -89,13 +92,18 @@ void Juego::OnSize(wxSizeEvent& event){
 }
 /********************************************************************************/
 void Juego::render(wxDC& dc){
-    dc.Clear();
-    
+   // dc.Clear();
+
+ // dc.SetBrush(*wxBLACK);
+  dc.SetBackground( *wxBLACK );
+  //dc.SetPen( *wxWHITE );
+  dc.Clear();
+
+   
     //Copia informacion de fondo score
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
     menu.scores(222,333,dc,2,1);   //escribe scores ... valor valor dc x y
 
-    //dc.DrawBitmap(menu.asciiToimage('a'),wxPoint(0,0),true);
     //Copia marcianos desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){
 		dc.DrawBitmap(et.getImagen(),et.getPosicion()*factor,true);//Dibuja con el factor de ampliacion
@@ -119,7 +127,6 @@ bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos 
 	} 
 	return false;
 }
-
 /********************************************************************************/
 bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
 		//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.

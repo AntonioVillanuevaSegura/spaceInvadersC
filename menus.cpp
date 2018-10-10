@@ -2,8 +2,8 @@
 /***************************  DEFINICIONES  *************************************/
 /********************************************************************************/
 menus::menus(){//Constructor de la clase ,carga letras lineas ...
-	factorPto=10*4;//Factor de adaptacion ,ampliacion
-	factorA=5;//Factor de adaptacion ,ampliacion	
+	factorPto=SEPARACION_OBJETOS;//Factor de adaptacion ,ampliacion
+	factorA=AMPLIACION_IMAGEN ;//Factor de adaptacion ,ampliacion	
 	
 	for (char num='0';num<='9';num++){//Carga numeros 0 - 9
 		cargaImagenes(string (1, num));

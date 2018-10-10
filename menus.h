@@ -10,6 +10,8 @@
 
 
 using namespace std;
+#define AMPLIACION_IMAGEN 5
+#define SEPARACION_OBJETOS 10*4;//Factor de adaptacion ,ampliacion
 #define dir "./spaceInvaders/"
 struct base {wxImage img;wxString ref;};//Estructura con referencias del tipo de elemento
 /********************************************************************************/
