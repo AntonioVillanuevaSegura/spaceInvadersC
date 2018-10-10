@@ -4,7 +4,9 @@
 
 /********************************************************************************/
 /********************************************************************************/
-Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Constructor del Juego
+Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
+nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(8,10))//Inicializa la nave 
+{ //Constructor del Juego
 		
 
 	m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
@@ -37,13 +39,8 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID){ //Const
 
 	pto=PuntoBase;//Reset punto de referencia 
 
-	
-	//if (pantalla.IsOk()){cout<<" OK FONDO PANTALLA "<<endl;}//test
-	
-	//w = -1;
-    //h = -1;
 }
-
+/********************************************************************************/
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	int x(0),y(0);	
@@ -99,6 +96,13 @@ void Juego::render(wxDC& dc){
     //Copia informacion de fondo pantall, "score"
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
     menu.scores(111,222,dc,2,1);   //escribe scores ... valor valor dc x y
+    //menu.stringToImage("--------------------------",dc,0,17);
+    menu.dibujaLinea(0,17,30,17,dc);//Linia divisora inferior 
+    
+    //Dibuja nave 
+	dc.DrawBitmap(nave.getImagen(false),
+		nave.getPosicion()*factor,//version wxPoint  
+		true);//Dibuja con el factor de ampliacion	
 
 	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
@@ -124,7 +128,7 @@ wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
 	
-	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+11){
+	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
 		return true;
 	} 
 	return false;
@@ -138,10 +142,15 @@ bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ?
 }
 /********************************************************************************/
 void Juego::resetMarcianos(){//Posicion inicial marcianos,vidas ..
+	
+	pto=PuntoBase;//Primer marciano posicion 	
+	
 	for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!						
 			et.setPosicion(pto=creaPos(pto));//Actualiza solo Y 
+			et.setVivo(true);//todos vivos
 		}
+				
 		//cambia el sentido de la marcha
-		//sentido=!sentido;	
+		sentido=true;	
 }
 /********************************************************************************/

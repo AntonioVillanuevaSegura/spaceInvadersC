@@ -44,7 +44,6 @@ wxBitmap menus::asciiToimage(char c){//Una ascii  devuelve su imagen correspondi
 	return imagenes[0].img;//No imagen  0 
 }
 /********************************************************************************/
-
 wxImage menus::resized(wxImage caracter){//Reescala marciano , la base es el tamano real en xpm
 		resize = wxBitmap( caracter.Scale( caracter.GetWidth () *factorA,
 											caracter.GetHeight ()*factorA
@@ -68,4 +67,11 @@ void menus::scores(int A,int B,wxDC& dc,int x,int y){//Escribe scores
 	//std::to_string(A);
 	stringToImage(to_string(A),dc,x,y);
 	stringToImage(to_string(B),dc,x+offset,y);	
+}
+/********************************************************************************/
+void menus::dibujaLinea(int x,int y,int xx,int yy,wxDC& dc){//Dibuja una linea de origen x,y y fin xx,yy
+	wxPen lapiz(*wxWHITE_PEN);//Crea uun lapiz blanco
+	lapiz.SetWidth(7);	
+	dc.SetPen(lapiz);//Lapiz blanco	
+	dc.DrawLine(x*factorPto,y*factorPto,xx*factorPto,yy*factorPto);//Linea
 }

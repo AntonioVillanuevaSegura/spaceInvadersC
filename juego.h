@@ -4,12 +4,13 @@
 #ifndef JUEGO_H
 #define JUEGO_H
 #include "marcianos.h"
+#include "nave.h"
 #include "menus.h"
 #include <wx/timer.h> //timer
 
 #define SEPARACION_OBJETOS_B 10*8;//Factor de adaptacion ,ampliacion
 
-const wxPoint PuntoBase(2,2);//Primera coordenada de un marciano
+const wxPoint PuntoBase(1,2);//Primera coordenada de un marciano
 
 class Juego :public wxPanel{
 	public:
@@ -27,6 +28,7 @@ class Juego :public wxPanel{
 		
 	private:
 	wxTimer m_timer;
+	Nave nave;//Una nave ....	
     wxImage pantalla;//imagen de la pantalla
     wxBitmap resized;  
     int w, h;//Tamano pantalla

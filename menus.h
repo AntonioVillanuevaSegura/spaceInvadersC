@@ -30,6 +30,7 @@ class menus{
 	void cargaImagenes(wxString c);//Carga imagenes en el vector desde su char correspondiente
 	wxImage resized(wxImage caracter);//Reescala marciano , la base es el tamano real en xpm	
 	void scores(int A,int B,wxDC& dc,int x=0,int y=0);//Escribe scores
+	void dibujaLinea(int x,int y,int xx,int yy,wxDC& dc);//Dibuja una linea de origen x,y y fin xx,yy
 };
 
 /***************************  DEFINICIONES  *************************************/
