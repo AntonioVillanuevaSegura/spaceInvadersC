@@ -3,18 +3,13 @@
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
-nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(8,9))//Inicializa la nave 
+nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(600,675))//Inicializa la nave 
 { //Constructor del Juego
 		
-
 	m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
 
-	factor=SEPARACION_OBJETOS_B;//Factor de adaptacion ,ampliacion 
-	
-	//Crea un vector de marcianos con sus coordenadas	
-	//Crea 11 marcianos por linea 11*5= 55 total
-
+	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
 	for (int n=1;n<=11;n++){//Crea 1era. linea
 		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos	
@@ -43,8 +38,9 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	int x(0),y(0);	
 	
-	if (limites()){//Los marcianos estan en el limite <-der o izq -> ?
-		
+	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
+	
+	if (limites()){//Los marcianos estan en el limite <-der o izq -> ?		
 		sentido = !(sentido); //cambia el sentido de la marcha	DER IZQ	
 		//incrementa y  descienden
 		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!		
@@ -90,28 +86,26 @@ void Juego::render(wxDC& dc){
  
 	dc.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
 	dc.Clear();
+		
+		
+		
+		
+    //Dibuja informacion de fondo de pantalla score ...
+    menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
+    menu.scores(111,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
+    menu.dibujaLinea(0,740,1200,740,dc);//Linia divisora inferior 
+    //wxString mystring = wxString::Format(wxT("%i"),myint);
+    menu.stringToImage(wxString::Format(wxT("%i"),3)+"PP",dc,0,750);//escribe texto scores 1a. linea    
+	menu.stringToImage("credit",dc,700,750);//escribe texto scores 1a. linea      
 	
-    //Copia informacion de fondo pantall, "score"
-    menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores
-    menu.scores(111,222,dc,2,1);   //escribe scores ... valor valor dc x y
-    //menu.stringToImage("--------------------------",dc,0,17);
-    menu.dibujaLinea(0,18,30,18,dc);//Linia divisora inferior 
-    
-    //Dibuja nave 
-	dc.DrawBitmap(nave.getImagen(true), 
-		nave.getPosicion().x*factor,nave.getPosicion().y*factor*0.9,		
-		true);//Dibuja con el factor de ampliacion	
 	
-	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
-    //Copia marcianos desde el vector hasta la pantalla  wxDC
-    for (auto et:marcianos){
-		dc.DrawBitmap(et.getImagen(imgActual),
-		//et.getPosicion()*factor,//version wxPoint 
-		//et.getPosicion().x*factor,et.getPosicion().y*factor*(0.6),//version x,y 
-		et.getPosicion().x,et.getPosicion().y,//version x,y 
-		true);//Dibuja con el factor de ampliacion	
-	}
+	
+    //Dibuja nave en la pantalla wxDC
+	dc.DrawBitmap(nave.getImagen(true),nave.getPosicion(),true);	
+	
+    //Dibuja marcianos .Desde el vector hasta la pantalla  wxDC
+    for (auto et:marcianos){dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);}
 }
 /********************************************************************************/
 wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
@@ -122,19 +116,12 @@ wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 		pt.x=PuntoBase.x+80 ;//Coordenada x del primer marciano mas su incremento
 		pt.y+=80;}//Salta una linea
 
-/*
-	if (pt.x<PuntoBase.x+11){ pt.x++; }//linea de marcianos hasta 11 
-	else {
-		pt.x=PuntoBase.x+1 ;//Coordenada x del primer marciano mas su incremento
-		pt.y++;}//Salta una linea
-*/
 	return pt;
 }
 /********************************************************************************/
 bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
 	
-//	if (marcianos[0].getPosicion().x <=40 || marcianos[10].getPosicion().x >PuntoBase.x+80*11){
 	if (marcianos[0].getPosicion().x <=2 || marcianos[10].getPosicion().x >=80*14+20){
 		return true;
 	}
@@ -172,9 +159,14 @@ void Juego::OnTecla(wxKeyEvent& event){//Evento teclas ...
 void Juego::ctrlNave(int ctrl){//Controla 1 izq 2 der 3 dispara 
 	wxPoint tmp(nave.getPosicion());
 	switch (ctrl){
-		case 1:tmp.x--;break;
-		case 2:tmp.x++;break;
+		case 1:tmp.x-=5;break;
+		case 2:tmp.x+=5;break;
 		case 3:break;	
 	}
+	//analisis limites de la nave 0-1200 
+	if (tmp.x<=0){tmp.x=0;}
+	if (tmp.x>=(1200-80)){tmp.x=(1200-80);}	
+	
 	nave.setPosicion (tmp);
+	paintNow();
 }

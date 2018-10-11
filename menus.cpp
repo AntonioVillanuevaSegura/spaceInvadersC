@@ -2,8 +2,6 @@
 /***************************  DEFINICIONES  *************************************/
 /********************************************************************************/
 menus::menus(){//Constructor de la clase ,carga letras lineas ...
-	factorPto=SEPARACION_OBJETOS;//Factor de adaptacion ,ampliacion
-	factorA=AMPLIACION_IMAGEN ;//Factor de adaptacion ,ampliacion	
 	
 	for (char num='0';num<='9';num++){//Carga numeros 0 - 9
 		cargaImagenes(string (1, num));
@@ -20,6 +18,8 @@ menus::menus(){//Constructor de la clase ,carga letras lineas ...
 	
 	cargaImagenes(string (1, '-'));//Carga una raya 
 	cargaImagenes("space");//Carga una raya 	
+
+	cargaImagenes("PlayerSprite");//Carga la nave 
 }
 /********************************************************************************/
 void menus::cargaImagenes(wxString c){//Carga imagenes en el vector desde su char correspondiente
@@ -27,12 +27,11 @@ void menus::cargaImagenes(wxString c){//Carga imagenes en el vector desde su cha
 	wxImage img;
 		directorio+=c;
 		directorio+=".xpm";		
-		//cout <<" directorio leido "<<directorio<<endl;//debug
+		
 		img.LoadFile(directorio, wxBITMAP_TYPE_XPM);//Carga una imagen
-		
-		//img=resized(img);//Reescalar la imagen 
-		
-		if (c=="space"){c=' ';}// chapuza 
+
+		if (c=="space"){c=' ';}// chapuza carga el espacio
+		if (c=="PlayerSprite"){c='P';}//chapuza carga la nave 
 		
 		imagenes.push_back(base{img,c});//Guarda una imagen y su referencia
 }
@@ -44,34 +43,21 @@ wxBitmap menus::asciiToimage(char c){//Una ascii  devuelve su imagen correspondi
 	return imagenes[0].img;//No imagen  0 
 }
 /********************************************************************************/
-wxImage menus::resized(wxImage caracter){//Reescala marciano , la base es el tamano real en xpm
-		resize = wxBitmap( caracter.Scale( caracter.GetWidth () *factorA,
-											caracter.GetHeight ()*factorA
-											/*, wxIMAGE_QUALITY_HIGH*/ ) );       
-       caracter=resize.ConvertToImage();
-return caracter;//devuelve un wxImage
-}
-/********************************************************************************/
 void menus::stringToImage(wxString texto,wxDC& dc,int x,int y){//"SCORE<1> HI-SCORE SCORE<2>"
-
 	for (char letra:texto){
-		//cout <<letra<<endl;//debug
-		dc.DrawBitmap(asciiToimage(letra),(++x)*factorPto,y*factorPto,true);
-		//dc.DrawBitmap(imagenes[0].img,wxPoint(0,0),true);
+		letra!='P' ? x+=40 : x+=90;//Si es una nave la base en x es mayor el doble
+		dc.DrawBitmap(asciiToimage(letra),(x),y,true);		
 	}
 }
 /********************************************************************************/
 void menus::scores(int A,int B,wxDC& dc,int x,int y){//Escribe scores
-	const int offset(18);
-	//traduce int to string std::to_string(num);
-	//std::to_string(A);
 	stringToImage(to_string(A),dc,x,y);
-	stringToImage(to_string(B),dc,x+offset,y);	
+	stringToImage(to_string(B),dc,x+700,y);	
 }
 /********************************************************************************/
 void menus::dibujaLinea(int x,int y,int xx,int yy,wxDC& dc){//Dibuja una linea de origen x,y y fin xx,yy
 	wxPen lapiz(*wxWHITE_PEN);//Crea uun lapiz blanco
 	lapiz.SetWidth(7);	
 	dc.SetPen(lapiz);//Lapiz blanco	
-	dc.DrawLine(x*factorPto,y*factorPto,xx*factorPto,yy*factorPto);//Linea
+	dc.DrawLine(x,y,xx,yy);//Linea
 }

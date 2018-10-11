@@ -8,7 +8,6 @@
 #include "menus.h"
 #include <wx/timer.h> //timer
 
-#define SEPARACION_OBJETOS_B 10*8;//Factor de adaptacion ,ampliacion
 
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
 

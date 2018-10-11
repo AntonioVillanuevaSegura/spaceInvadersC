@@ -34,9 +34,6 @@ class Marciano{
 	wxPoint getPosicion();
 	void DebugMarciano();//Para ver informacion 	
 	void setPosicion(wxPoint pto);	
-	wxImage resized(wxImage marciano);//Reescala marcianos	
-
-
 };
 /***************************  DEFINICIONES  *************************************/
 #include "marcianos.cpp"
