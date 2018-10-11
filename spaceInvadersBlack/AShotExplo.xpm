@@ -1,8 +1,8 @@
 /* XPM */
 static char * AShotExplo_xpm[] = {
 "6 8 2 1",
-" 	g None",
-".	g #000000",
+" 	g #000000",
+".	g #ffffff",
 "  .   ",
 ".   . ",
 "  .. .",
