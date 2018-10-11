@@ -96,7 +96,8 @@ void Juego::render(wxDC& dc){
     menu.dibujaLinea(0,740,1200,740,dc);//Linia divisora inferior 
     //wxString mystring = wxString::Format(wxT("%i"),myint);
     menu.stringToImage(wxString::Format(wxT("%i"),3)+"PP",dc,0,750);//escribe texto scores 1a. linea    
-	menu.stringToImage("credit",dc,700,750);//escribe texto scores 1a. linea      
+	menu.stringToImage (wxString ("credit "+(wxString::Format(wxT("%i"),14))),
+	dc,700,750);//escribe texto scores 1a. linea      
 	
 	
 	
@@ -122,7 +123,7 @@ wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
 bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
 	
-	if (marcianos[0].getPosicion().x <=2 || marcianos[10].getPosicion().x >=80*14+20){
+	if (marcianos[0].getPosicion().x <=2 || marcianos[10].getPosicion().x >=(1200-80)){
 		return true;
 	}
 	return false;
