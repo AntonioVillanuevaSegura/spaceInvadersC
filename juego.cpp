@@ -6,7 +6,8 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
 nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(600,675))//Inicializa la nave 
 { //Constructor del Juego
 		
-	m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
+	//m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
+		m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
@@ -37,32 +38,39 @@ nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	int x(0),y(0);	
+	wxClientDC  dc(this);//test ............
 	
-	imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
+		imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
-	if (limites()){//Los marcianos estan en el limite <-der o izq -> ?		
-		sentido = !(sentido); //cambia el sentido de la marcha	DER IZQ	
-		//incrementa y  descienden
-		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!		
+		if (limites()){//Los marcianos estan en el limite <-der o izq -> ?		
+			sentido = !(sentido); //cambia el sentido de la marcha	DER IZQ	
+			//incrementa y  descienden
+			for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!		
+				x=et.getPosicion().x;//Obtiene X del marciano corriente 		
+				y= et.getPosicion().y;//Obitiene Y del marciano corriente
+		
+				//Nueva posicion en Y marciano bajan
+				et.setPosicion(wxPoint(x,y+10));//Actualiza solo Y 
+			}
+		}
+	
+		if (limiteInferior()){resetMarcianos();} //Han llegado abajo reseteamos los marcianos	
+	
+		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
+			
+			//Mueve marciano izq. o der.
 			x=et.getPosicion().x;//Obtiene X del marciano corriente 		
 			y= et.getPosicion().y;//Obitiene Y del marciano corriente
 		
-			//Nueva posicion en Y marciano bajan
-			et.setPosicion(wxPoint(x,y+10));//Actualiza solo Y 
+			//Nueva posicion del marciano en funcion del sentido
+			et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
 		}
-	}
+
 	
-	if (limiteInferior()){resetMarcianos();} //Han llegado abajo reseteamos los marcianos	
 	
-   for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
-		//Mueve marciano izq. o der.
-		x=et.getPosicion().x;//Obtiene X del marciano corriente 		
-		y= et.getPosicion().y;//Obitiene Y del marciano corriente
+	disparoNave(false);//-------------se ejecuta mucho mas 
 		
-		//Nueva posicion del marciano en funcion del sentido
-		et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
-	}
-	paintNow();
+	paintNow();//parpadeo ....
 }
 /********************************************************************************/
 	//Dibujo
@@ -88,8 +96,6 @@ void Juego::render(wxDC& dc){
 	dc.Clear();
 		
 		
-		
-		
     //Dibuja informacion de fondo de pantalla score ...
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
     menu.scores(111,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
@@ -99,9 +105,14 @@ void Juego::render(wxDC& dc){
 	menu.stringToImage (wxString ("credit "+(wxString::Format(wxT("%i"),14))),
 	dc,700,750);//escribe texto scores 1a. linea      
 	
-	
-	
-	
+	//Dibuja disparo
+	if (!naveDisp.empty()){//Si hay disparos en el vector
+		for (auto disp:naveDisp){//lee el vector de disparos
+			dc.DrawPoint(disp);//...los dibuja ..
+		}
+	}
+
+
     //Dibuja nave en la pantalla wxDC
 	dc.DrawBitmap(nave.getImagen(true),nave.getPosicion(),true);	
 	
@@ -160,9 +171,9 @@ void Juego::OnTecla(wxKeyEvent& event){//Evento teclas ...
 void Juego::ctrlNave(int ctrl){//Controla 1 izq 2 der 3 dispara 
 	wxPoint tmp(nave.getPosicion());
 	switch (ctrl){
-		case 1:tmp.x-=5;break;
-		case 2:tmp.x+=5;break;
-		case 3:break;	
+		case 1:tmp.x-=5;break;//izq.
+		case 2:tmp.x+=5;break;//derch.
+		case 3:disparoNave(true);break;//disparo	
 	}
 	//analisis limites de la nave 0-1200 
 	if (tmp.x<=0){tmp.x=0;}
@@ -171,3 +182,26 @@ void Juego::ctrlNave(int ctrl){//Controla 1 izq 2 der 3 dispara
 	nave.setPosicion (tmp);
 	paintNow();
 }
+/********************************************************************************/
+void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
+	//lee el vector de disparo
+	//mira si colisiona
+	//mira su fin
+	//destruye pop
+	if (disparo) { //introduce un disparo
+		naveDisp.push_back (nave.getPosicion());
+		disparo=false;}
+		
+	if (!naveDisp.empty()){//hay disparos en el vector ?
+		
+		//mira todo el vector bucle 
+		for (auto& disp:naveDisp){//lee el vector de disparos referencia !!!!
+			disp.y-=7;//decrementa y 
+			if (disp.y<=80){naveDisp.pop_back();}//ver si ha llegado al final y==0
+		
+		//ver si colisiona con marciano
+		
+		}
+	} 
+	
+ }
