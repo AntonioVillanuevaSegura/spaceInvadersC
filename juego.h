@@ -10,7 +10,7 @@
 
 #define SEPARACION_OBJETOS_B 10*8;//Factor de adaptacion ,ampliacion
 
-const wxPoint PuntoBase(1,2);//Primera coordenada de un marciano
+const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
 
 class Juego :public wxPanel{
 	public:
@@ -21,6 +21,7 @@ class Juego :public wxPanel{
     void paintEvent(wxPaintEvent & evt);
     void paintNow();
     void OnSize(wxSizeEvent& event);
+    void OnTecla(wxKeyEvent& event);//Evento teclas ...
     void render(wxDC& dc);
     wxPoint creaPos(wxPoint pto);//crea coordenadas marciano construccion
     bool limites();//Han llegado a la derecha o a la izquierda los marcianos ?
@@ -41,6 +42,7 @@ class Juego :public wxPanel{
     bool sentido;//sentido del movimiento de los marcianos
     bool imgActual;//imagen que utiliza el marciano imgA o imgB
     void resetMarcianos();//Posicion inicial ,vidas ..
+    void ctrlNave(int ctrl);//Controla 1 izq 2 der 3 dispara 
   
 	    DECLARE_EVENT_TABLE()
 };
@@ -51,6 +53,7 @@ BEGIN_EVENT_TABLE(Juego, wxPanel)
 	EVT_TIMER(TIMER_ID, Juego::OnTimer)
 	EVT_PAINT(Juego::paintEvent)
 	EVT_SIZE(Juego::OnSize)
+	EVT_CHAR(Juego::OnTecla)//Lee el teclado ...evento
 END_EVENT_TABLE()
 
 /***************************  DEFINICIONES  *************************************/

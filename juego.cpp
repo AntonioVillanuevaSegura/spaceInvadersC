@@ -17,7 +17,7 @@ nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint
 
 
 	for (int n=1;n<=11;n++){//Crea 1era. linea
-		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
 	for (int n=12;n<=22;n++){//Crea 2a. linea
@@ -44,16 +44,16 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 	int x(0),y(0);	
 	
 	if (limites()){//Los marcianos estan en el limite <-der o izq -> ?
-		//incrementa y 
+		
+		sentido = !(sentido); //cambia el sentido de la marcha	DER IZQ	
+		//incrementa y  descienden
 		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!		
 			x=et.getPosicion().x;//Obtiene X del marciano corriente 		
 			y= et.getPosicion().y;//Obitiene Y del marciano corriente
 		
 			//Nueva posicion en Y marciano bajan
-			et.setPosicion(wxPoint(x,++y));//Actualiza solo Y 
+			et.setPosicion(wxPoint(x,y+10));//Actualiza solo Y 
 		}
-		//cambia el sentido de la marcha
-		sentido=!sentido;		
 	}
 	
 	if (limiteInferior()){resetMarcianos();} //Han llegado abajo reseteamos los marcianos	
@@ -64,7 +64,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 		y= et.getPosicion().y;//Obitiene Y del marciano corriente
 		
 		//Nueva posicion del marciano en funcion del sentido
-		et.setPosicion(sentido ? wxPoint(x+1,y) : wxPoint(x-1,y));
+		et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
 	}
 	paintNow();
 }
@@ -108,34 +108,43 @@ void Juego::render(wxDC& dc){
     for (auto et:marcianos){
 		dc.DrawBitmap(et.getImagen(imgActual),
 		//et.getPosicion()*factor,//version wxPoint 
-		et.getPosicion().x*factor,et.getPosicion().y*factor*(0.6),//version x,y 
+		//et.getPosicion().x*factor,et.getPosicion().y*factor*(0.6),//version x,y 
+		et.getPosicion().x,et.getPosicion().y,//version x,y 
 		true);//Dibuja con el factor de ampliacion	
 	}
 }
 /********************************************************************************/
 wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
+	//cada marciano mide 80x80 ,hay 11, la primera posicion sera 
 
+	if (pt.x<PuntoBase.x+80*11){ pt.x+=80; }//linea de marcianos hasta 11 
+	else {
+		pt.x=PuntoBase.x+80 ;//Coordenada x del primer marciano mas su incremento
+		pt.y+=80;}//Salta una linea
+
+/*
 	if (pt.x<PuntoBase.x+11){ pt.x++; }//linea de marcianos hasta 11 
 	else {
 		pt.x=PuntoBase.x+1 ;//Coordenada x del primer marciano mas su incremento
 		pt.y++;}//Salta una linea
-
+*/
 	return pt;
 }
 /********************************************************************************/
 bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos ?
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
 	
-	if (marcianos[0].getPosicion().x <=0 || marcianos[10].getPosicion().x >PuntoBase.x+12){
+//	if (marcianos[0].getPosicion().x <=40 || marcianos[10].getPosicion().x >PuntoBase.x+80*11){
+	if (marcianos[0].getPosicion().x <=2 || marcianos[10].getPosicion().x >=80*14+20){
 		return true;
-	} 
+	}
 	return false;
 }
 /********************************************************************************/
 bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
 	//Analiza  marciano inferior para analizar y 
 					
-	if (marcianos[44].getPosicion().y > PuntoBase.y + 10){return true;}	 
+	if (marcianos[44].getPosicion().y > PuntoBase.y + 80*10){return true;}	 
 	return false;	
 }
 /********************************************************************************/
@@ -152,3 +161,20 @@ void Juego::resetMarcianos(){//Posicion inicial marcianos,vidas ..
 		sentido=true;	
 }
 /********************************************************************************/
+void Juego::OnTecla(wxKeyEvent& event){//Evento teclas ...
+	//int flags=0;
+	if (event.GetKeyCode()==WXK_LEFT){ctrlNave(1);}//->
+	if (event.GetKeyCode()==WXK_RIGHT){ctrlNave(2);}//<-
+	if (event.GetKeyCode()==WXK_SPACE  ||
+	event.GetKeyCode()==WXK_UP){ctrlNave(3);}//Espacio
+}
+/********************************************************************************/
+void Juego::ctrlNave(int ctrl){//Controla 1 izq 2 der 3 dispara 
+	wxPoint tmp(nave.getPosicion());
+	switch (ctrl){
+		case 1:tmp.x--;break;
+		case 2:tmp.x++;break;
+		case 3:break;	
+	}
+	nave.setPosicion (tmp);
+}

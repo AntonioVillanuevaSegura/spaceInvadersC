@@ -6,13 +6,13 @@ Marciano::Marciano(wxString posA,wxString posB,wxString exp,  wxPoint pt,wxBitma
 	this->pt=pt;
 	vivo=true; 
 	marcianoA.LoadFile(posA, format);	//Carga el fichero imagen
-	marcianoA=resized(marcianoA);//Reescala las figuras 
+	//marcianoA=resized(marcianoA);//Reescala las figuras 
 	
 	marcianoB.LoadFile(posB, format);	//Carga el fichero imagen
-	marcianoB=resized(marcianoB);//Reescala las figuras 
+	//marcianoB=resized(marcianoB);//Reescala las figuras 
 	
 	explosion.LoadFile(exp, format);	//Carga el fichero imagen
-	explosion=resized(marcianoA);//Reescala las figuras 
+	//explosion=resized(marcianoA);//Reescala las figuras 
 	
 	
     //if (marcianoA.IsOk()){cout<<" OK LOADING IMAGE "<<endl;}

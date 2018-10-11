@@ -30,7 +30,7 @@ void menus::cargaImagenes(wxString c){//Carga imagenes en el vector desde su cha
 		//cout <<" directorio leido "<<directorio<<endl;//debug
 		img.LoadFile(directorio, wxBITMAP_TYPE_XPM);//Carga una imagen
 		
-		img=resized(img);//Reescalar la imagen 
+		//img=resized(img);//Reescalar la imagen 
 		
 		if (c=="space"){c=' ';}// chapuza 
 		
