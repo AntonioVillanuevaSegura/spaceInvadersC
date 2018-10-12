@@ -7,7 +7,9 @@
 #include "nave.h"
 #include "menus.h"
 #include <wx/timer.h> //timer
-
+#include <wx/dcbuffer.h>
+#include <wx/dcclient.h>
+//#include <wx/brush>
 
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
 
@@ -48,6 +50,7 @@ class Juego :public wxPanel{
     bool imgActual;//imagen que utiliza el marciano imgA o imgB
     void resetMarcianos();//Posicion inicial ,vidas ..
     void ctrlNave(int ctrl);//Controla 1 izq 2 der 3 dispara 
+    wxClientDC clienteDC;
 
   
 	    DECLARE_EVENT_TABLE()

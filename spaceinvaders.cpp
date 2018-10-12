@@ -11,6 +11,7 @@ class Run: public wxApp
     wxFrame *frame;
     Juego* panelDibujo;
     bool render_loop_on;
+    
 public:
 
 	//Main wxWidgetss
@@ -59,6 +60,7 @@ public:
 			panelDibujo->disparoNave(false);//mueve el disparo
 			panelDibujo->paintNow();//dibuja todo 
 			evt.RequestMore();
+			cout <<" idle" <<endl;
 		}
 	}
 

@@ -3,9 +3,10 @@
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
-nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(600,675))//Inicializa la nave 
+nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(600,675)),clienteDC(this) //Inicializa la nave 
 { //Constructor del Juego
-		
+	
+	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	//m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
 		m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
@@ -32,13 +33,16 @@ nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint
 	}	
 
 	pto=PuntoBase;//Reset punto de referencia 
+	
+	//clienteDC.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
+	//wxBrush brocha(*wxBLACK,wxBRUSHSTYLE_SOLID );
+	//clienteDC.SetBrush (brocha);
 
 }
 /********************************************************************************/
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	int x(0),y(0);	
-	wxClientDC  dc(this);//test ............
 	
 		imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
@@ -67,7 +71,6 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 		}
 
 	
-	
 	disparoNave(false);//-------------se ejecuta mucho mas 
 		
 	paintNow();//parpadeo ....
@@ -75,14 +78,15 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 /********************************************************************************/
 	//Dibujo
 void Juego::paintEvent(wxPaintEvent & evt){
-	wxPaintDC dc(this);
+	wxPaintDC dc(this);// only to be used in paint events. use wxClientDC to paint outside the paint event
     render(dc);
 }
 /********************************************************************************/
 void Juego::paintNow(){
 	
-	wxClientDC dc(this);
-    render(dc);
+	//wxClientDC dc(this);//  use wxClientDC to paint outside the paint event	
+    //render(dc);
+	render(clienteDC);
 }
 /********************************************************************************/
 void Juego::OnSize(wxSizeEvent& event){
@@ -91,11 +95,13 @@ void Juego::OnSize(wxSizeEvent& event){
 }
 /********************************************************************************/
 void Juego::render(wxDC& dc){
- 
+
+
 	dc.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
+	wxBrush brocha(*wxBLACK,wxBRUSHSTYLE_SOLID );
+	dc.SetBrush (brocha);
 	dc.Clear();
-		
-		
+			
     //Dibuja informacion de fondo de pantalla score ...
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
     menu.scores(111,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
@@ -118,6 +124,7 @@ void Juego::render(wxDC& dc){
 	
     //Dibuja marcianos .Desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);}
+    Refresh();
 }
 /********************************************************************************/
 wxPoint Juego::creaPos(wxPoint pt){//crea coordenadas marciano solo al inicio
