@@ -8,7 +8,7 @@ nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint
 	
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	//m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
-		m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
+		m_timer.Start(4); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
@@ -44,6 +44,12 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 {
 	int x(0),y(0);	
 	
+	if (marcianoTimer>1000){marcianoTimer=0;}//reset inicial
+	if (marcianoTimer<30){marcianoTimer++;} //El tiempo marciano va mas lento que una bala 
+	
+	else{
+		marcianoTimer=0;//Reset
+		
 		imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
 		if (limites()){//Los marcianos estan en el limite <-der o izq -> ?		
@@ -69,9 +75,10 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 			//Nueva posicion del marciano en funcion del sentido
 			et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
 		}
-
+		
+	}
 	
-	disparoNave(false);//-------------se ejecuta mucho mas 
+	disparoNave(false);//Mira el vector de disparos
 		
 	paintNow();//parpadeo ....
 }
@@ -195,7 +202,7 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 	//mira si colisiona
 	//mira su fin
 	//destruye pop
-	if (disparo) { //introduce un disparo
+	if (disparo) { //introduce un disparo en el vector
 		naveDisp.push_back (nave.getPosicion());
 		disparo=false;}
 		
@@ -203,8 +210,8 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 		
 		//mira todo el vector bucle 
 		for (auto& disp:naveDisp){//lee el vector de disparos referencia !!!!
-			disp.y-=7;//decrementa y 
-			if (disp.y<=80){naveDisp.pop_back();}//ver si ha llegado al final y==0
+			disp.y-=10;//decrementa y 
+			if (disp.y<=70){naveDisp.pop_back();}//ver si ha llegado al final y==0
 		
 		//ver si colisiona con marciano
 		

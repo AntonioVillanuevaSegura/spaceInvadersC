@@ -6,6 +6,7 @@
 #include "marcianos.h"
 #include "nave.h"
 #include "menus.h"
+#include "disparos.h"
 #include <wx/timer.h> //timer
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
