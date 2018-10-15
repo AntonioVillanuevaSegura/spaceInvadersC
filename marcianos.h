@@ -10,7 +10,7 @@
 #include <vector> 
 #include <wx/dcmemory.h>
 using namespace std;
-#define dir "./spaceInvaders/"
+
 #define AMPLIACION_IMAGEN 5
 
 /********************************************************************************/

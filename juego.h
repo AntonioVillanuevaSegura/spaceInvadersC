@@ -3,14 +3,20 @@
 /********************************************************************************/
 #ifndef JUEGO_H
 #define JUEGO_H
+#include "menus.h"
 #include "marcianos.h"
 #include "nave.h"
-#include "menus.h"
 #include "disparos.h"
 #include <wx/timer.h> //timer
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
 //#include <wx/brush>
+#include <wx/dir.h> //ver directorios ficheros
+
+#ifndef DIRECTORIO
+	#define DIRECTORIO "./spaceInvaders/"
+#endif
+
 
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
 
@@ -43,15 +49,19 @@ class Juego :public wxPanel{
     int factor ;//factor multiplicador
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
     //Disparos de los marcianos
-    vector <wxPoint> naveDisp;
-    vector <wxPoint> marcianoDisp;    
+    vector <wxPoint> naveDisp;//Disparos nave 
+    vector <wxPoint> marcianoDisp;//Disparos marcianos  
+    vector <base> imagenes;//Imagenes del juego  
     
     menus menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos
     bool imgActual;//imagen que utiliza el marciano imgA o imgB
     void resetMarcianos();//Posicion inicial ,vidas ..
     void ctrlNave(int ctrl);//Controla 1 izq 2 der 3 dispara 
+    void cargaImagenes();//Carga imagenes juego ...
+    wxImage buscaImagen(wxString nombre);//Busca en el vector de imagenes por su nombre 
     wxClientDC clienteDC;
+ 
 
   
 	    DECLARE_EVENT_TABLE()

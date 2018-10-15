@@ -2,7 +2,6 @@
 /***************************  DEFINICIONES  *************************************/
 /********************************************************************************/
 Marciano::Marciano(wxString posA,wxString posB,wxString exp,  wxPoint pt,wxBitmapType format){//Constructor
-	factor=AMPLIACION_IMAGEN;//ampliacion de la imagen
 	this->pt=pt;
 	vivo=true; 
 	marcianoA.LoadFile(posA, format);	//Carga el fichero imagen

@@ -23,7 +23,7 @@ menus::menus(){//Constructor de la clase ,carga letras lineas ...
 }
 /********************************************************************************/
 void menus::cargaImagenes(wxString c){//Carga imagenes en el vector desde su char correspondiente
-	wxString directorio(dir); //"./spaceInvaders/"
+	wxString directorio(DIRECTORIO); //"./spaceInvaders/"
 	wxImage img;
 		directorio+=c;
 		directorio+=".xpm";		

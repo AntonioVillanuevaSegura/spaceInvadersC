@@ -10,7 +10,8 @@
 
 using namespace std;
 
-#define dir "./spaceInvaders/"
+#define DIRECTORIO "./spaceInvaders/"	
+
 struct base {wxImage img;wxString ref;};//Estructura con referencias del tipo de elemento
 /********************************************************************************/
 /********************************************************************************/

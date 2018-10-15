@@ -3,41 +3,39 @@
 /********************************************************************************/
 /********************************************************************************/
 Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),
-nave(dir"PlayerSprite.xpm",dir"PlayerSprite0.xpm",dir"PlayerSprite1.xpm",wxPoint(600,675)),clienteDC(this) //Inicializa la nave 
+nave(DIRECTORIO"PlayerSprite.xpm",DIRECTORIO"PlayerSprite0.xpm",DIRECTORIO"PlayerSprite1.xpm",wxPoint(600,675)),clienteDC(this) //Inicializa la nave 
 { //Constructor del Juego
 	
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	//m_timer.Start(1000); // Intervalo de 1 segundo en el timer	
-		m_timer.Start(4); // Intervalo de 1 segundo en el timer	
+	m_timer.Start(4); // Intervalo de 1 segundo en el timer	
 	pto=PuntoBase;//Primer marciano posicion 
+	cargaImagenes();//Carga todas las imagenes del juego ...
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
+
 	for (int n=1;n<=11;n++){//Crea 1era. linea
-		marcianos.push_back( Marciano(dir"Alien3.xpm",dir"Alien3b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos	
+		marcianos.push_back( Marciano(DIRECTORIO"Alien3.xpm",DIRECTORIO"Alien3b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
 	for (int n=12;n<=22;n++){//Crea 2a. linea
-		marcianos.push_back(Marciano(dir"Alien1.xpm",dir"Alien1b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(DIRECTORIO"Alien1.xpm",DIRECTORIO"Alien1b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
 	for (int n=23;n<=33;n++){//Crea 3a. linea
-		marcianos.push_back(Marciano(dir"Alien1.xpm",dir"Alien1b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(DIRECTORIO"Alien1.xpm",DIRECTORIO"Alien1b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
 	for (int n=34;n<=44;n++){//Crea 4a. linea
-		marcianos.push_back(Marciano(dir"Alien0.xpm",dir"Alien0b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(DIRECTORIO"Alien0.xpm",DIRECTORIO"Alien0b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	for (int n=45;n<=55;n++){//Crea 5a. linea
-		marcianos.push_back(Marciano(dir"Alien0.xpm",dir"Alien0b.xpm",dir"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(DIRECTORIO"Alien0.xpm",DIRECTORIO"Alien0b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}	
 
 	pto=PuntoBase;//Reset punto de referencia 
 	
-	//clienteDC.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
-	//wxBrush brocha(*wxBLACK,wxBRUSHSTYLE_SOLID );
-	//clienteDC.SetBrush (brocha);
-
 }
 /********************************************************************************/
 void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
@@ -108,7 +106,7 @@ void Juego::render(wxDC& dc){
 	wxBrush brocha(*wxBLACK,wxBRUSHSTYLE_SOLID );
 	dc.SetBrush (brocha);
 	dc.Clear();
-			
+		
     //Dibuja informacion de fondo de pantalla score ...
     menu.stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
     menu.scores(111,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
@@ -131,6 +129,10 @@ void Juego::render(wxDC& dc){
 	
     //Dibuja marcianos .Desde el vector hasta la pantalla  wxDC
     for (auto et:marcianos){dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);}
+   
+    
+       // for (auto img:imagenes) {dc.DrawBitmap(img,(pto=creaPos(pto)),true);}
+      // dc.DrawBitmap(imagenes[2],80,80,true);
     Refresh();
 }
 /********************************************************************************/
@@ -218,4 +220,34 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 		}
 	} 
 	
+ }
+/********************************************************************************/
+void Juego::cargaImagenes(){//Carga imagenes juego ... 88 imagenes  
+	wxImage tmp;//una imagen temporal
+	wxDir dir(DIRECTORIO);//Directorio de imagenes
+
+	if ( !dir.IsOpened() ){cout <<" ERROR IMAGENES " ;exit (0);return;}//Error directorio immagen !!!!
+	
+	//wxString filename;
+	wxString filename=DIRECTORIO;
+	wxString filespec="*.xpm";//Extension a cargar
+	int flags=wxDIR_DEFAULT;
+	
+	bool cont = dir.GetFirst(&filename, filespec, flags);//Numero de ficheros a cargar
+
+	while ( cont )
+	{
+		//cout <<filename<<endl;//Nombre ficheros
+		cont = dir.GetNext(&filename);//Existe otro fichero ?
+		
+		tmp.LoadFile(DIRECTORIO"*.xpm", wxBITMAP_TYPE_XPM); 		
+		imagenes.push_back( base{tmp,filename});	//Carga el fichero imagen		
+	}
+}
+/********************************************************************************/
+wxImage Juego::buscaImagen(wxString nombre){//Busca en el vector de imagenes por su nombre 
+	for (auto img:imagenes){//Recorre el vector de imagenes,nombre
+		if(img.ref==nombre){return img.img;}//Si en cuentra la imagen , la devuelve
+	}
+	return imagenes[0].img;//No imagen  0 ...un asterisco
  }
