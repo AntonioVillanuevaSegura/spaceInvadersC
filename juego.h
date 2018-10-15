@@ -13,10 +13,7 @@
 //#include <wx/brush>
 #include <wx/dir.h> //ver directorios ficheros
 
-#ifndef DIRECTORIO
-	#define DIRECTORIO "./spaceInvaders/"
-#endif
-
+#define DIRECTORIO "./spaceInvaders/"
 
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
 
@@ -38,16 +35,11 @@ class Juego :public wxPanel{
 		
 	private:
 	wxTimer m_timer;
-    wxImage pantalla;//imagen de la pantalla
-    wxBitmap resized;  
+	bool colision(wxPoint a,wxPoint b);//Objetos o puntos en colision ?
     int marcianoTimer;
-    int w, h;//Tamano pantalla
     int score1,score2;//Puntos a enviar a menus 
     wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
-    int creados;//N de marcianos a creas
-    int factor ;//factor multiplicador
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
-    //Disparos de los marcianos
     vector <wxPoint> naveDisp;//Disparos nave 
     vector <wxPoint> marcianoDisp;//Disparos marcianos  
     vector <base> gameImg;//Imagenes del juego  
