@@ -10,9 +10,6 @@
 #include <vector> 
 #include <wx/dcmemory.h>
 using namespace std;
-
-#define AMPLIACION_IMAGEN 5
-
 /********************************************************************************/
 /********************************************************************************/
 class Marciano{
@@ -25,9 +22,7 @@ class Marciano{
 	int factor;//factor de ampliacion en la reescala
 	
 	public:
-	
 	Marciano();
-	Marciano(wxString posA,wxString posB,wxString exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor A
 	Marciano(wxImage posA,wxImage posB,wxImage exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor B		
 	bool getVivo();
 	void setVivo(bool estado);//vivo =true o false	

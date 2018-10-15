@@ -38,7 +38,6 @@ class Juego :public wxPanel{
 		
 	private:
 	wxTimer m_timer;
-	Nave nave;//Una nave ....	
     wxImage pantalla;//imagen de la pantalla
     wxBitmap resized;  
     int marcianoTimer;
@@ -53,7 +52,7 @@ class Juego :public wxPanel{
     vector <wxPoint> marcianoDisp;//Disparos marcianos  
     vector <base> gameImg;//Imagenes del juego  
     
-    menus menu;//Intancia del menu de fondo
+    menus *menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos
     bool imgActual;//imagen que utiliza el marciano imgA o imgB
     void resetMarcianos();//Posicion inicial ,vidas ..
@@ -61,8 +60,8 @@ class Juego :public wxPanel{
     void cargaImagenes();//Carga imagenes juego ...
     wxImage buscaImagen(wxString nombre);//Busca en el vector de imagenes por su nombre 
     wxClientDC clienteDC;
- 
-
+    
+    Nave *nave;//Una nave ....	
   
 	    DECLARE_EVENT_TABLE()
 };

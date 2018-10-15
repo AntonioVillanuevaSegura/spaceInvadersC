@@ -1,51 +1,20 @@
 #include "menus.h"
 /***************************  DEFINICIONES  *************************************/
 /********************************************************************************/
-menus::menus(){//Constructor de la clase ,carga letras lineas ...
-	
-	for (char num='0';num<='9';num++){//Carga numeros 0 - 9
-		cargaImagenes(string (1, num));
-
-	}
-	
-	for (char letras='a';letras<='z';letras++){//Carga letras A- Z
-		cargaImagenes(string (1, letras));
-	}
-	
-	for (char signos='<';signos<='>';signos++){//Carga signos < = >
-		cargaImagenes(string (1, signos));
-	}
-	
-	cargaImagenes(string (1, '-'));//Carga una raya 
-	cargaImagenes("space");//Carga una raya 	
-
-	cargaImagenes("PlayerSprite");//Carga la nave 
+menus::menus(vector<base> v):imagenes(v){//Constructor de la clase ,carga letras lineas ...	
 }
 /********************************************************************************/
-void menus::cargaImagenes(wxString c){//Carga imagenes en el vector desde su char correspondiente
-	wxString directorio(DIRECTORIO); //"./spaceInvaders/"
-	wxImage img;
-		directorio+=c;
-		directorio+=".xpm";		
-		
-		img.LoadFile(directorio, wxBITMAP_TYPE_XPM);//Carga una imagen
-
-		if (c=="space"){c=' ';}// chapuza carga el espacio
-		if (c=="PlayerSprite"){c='P';}//chapuza carga la nave 
-		
-		imagenes.push_back(base{img,c});//Guarda una imagen y su referencia
-}
-/********************************************************************************/
-wxBitmap menus::asciiToimage(char c){//Una ascii  devuelve su imagen correspondiente
-	for (auto img:imagenes){
-		if(img.ref==c){return img.img;}
+wxBitmap menus::asciiToimage(wxString nombre){//Una ascii  devuelve su imagen correspondiente
+	nombre+=".xpm";
+	for (auto& img:imagenes){//Recorre el vector de imagenes,nombre
+		if((img.ref).Cmp(nombre)==0){return img.img;}//Si en cuentra la imagen , la devuelve
 	}
-	return imagenes[0].img;//No imagen  0 
+	return imagenes[0].img;//No imagen  0 ...un asterisco
 }
 /********************************************************************************/
 void menus::stringToImage(wxString texto,wxDC& dc,int x,int y){//"SCORE<1> HI-SCORE SCORE<2>"
 	for (char letra:texto){
-		letra!='P' ? x+=40 : x+=90;//Si es una nave la base en x es mayor el doble
+		x+=40;
 		dc.DrawBitmap(asciiToimage(letra),(x),y,true);		
 	}
 }

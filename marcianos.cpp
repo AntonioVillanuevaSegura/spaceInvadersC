@@ -1,20 +1,6 @@
 #include "marcianos.h"
 /***************************  DEFINICIONES  *************************************/
 /********************************************************************************/
-
-Marciano::Marciano(wxString posA,wxString posB,wxString exp,  wxPoint pt,wxBitmapType format){//Constructor A
-	this->pt=pt;
-	vivo=true; 
-	marcianoA.LoadFile(posA, format);	//Carga el fichero imagen
-
-	marcianoB.LoadFile(posB, format);	//Carga el fichero imagen
-
-	explosion.LoadFile(exp, format);	//Carga el fichero imagen
-
-    //if (marcianoA.IsOk()){cout<<" OK LOADING IMAGE "<<endl;}
-}
-
-/********************************************************************************/
 Marciano::Marciano(wxImage posA,wxImage posB,wxImage exp, wxPoint pt,wxBitmapType format)://Constructor B
 marcianoA(posA),marcianoB(posB),explosion(exp)
 {
