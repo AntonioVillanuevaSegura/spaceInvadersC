@@ -16,6 +16,27 @@ nave(DIRECTORIO"PlayerSprite.xpm",DIRECTORIO"PlayerSprite0.xpm",DIRECTORIO"Playe
 
 
 	for (int n=1;n<=11;n++){//Crea 1era. linea
+		marcianos.push_back( Marciano(buscaImagen("Alien3.xpm"),buscaImagen("Alien3b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
+	}
+	
+	for (int n=12;n<=22;n++){//Crea 2a. linea
+		marcianos.push_back(Marciano(buscaImagen("Alien1.xpm"),buscaImagen("Alien1b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+	}
+	
+	for (int n=23;n<=33;n++){//Crea 3a. linea
+		marcianos.push_back(Marciano(buscaImagen("Alien1.xpm"),buscaImagen("Alien1b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+	}
+	
+	for (int n=34;n<=44;n++){//Crea 4a. linea
+		marcianos.push_back(Marciano(buscaImagen("Alien0.xpm"),buscaImagen("Alien0b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+	}
+	for (int n=45;n<=55;n++){//Crea 5a. linea
+		marcianos.push_back(Marciano(buscaImagen("Alien0.xpm"),buscaImagen("Alien0b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+	}		
+	
+
+/*
+	for (int n=1;n<=11;n++){//Crea 1era. linea
 		marcianos.push_back( Marciano(DIRECTORIO"Alien3.xpm",DIRECTORIO"Alien3b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
@@ -33,7 +54,7 @@ nave(DIRECTORIO"PlayerSprite.xpm",DIRECTORIO"PlayerSprite0.xpm",DIRECTORIO"Playe
 	for (int n=45;n<=55;n++){//Crea 5a. linea
 		marcianos.push_back(Marciano(DIRECTORIO"Alien0.xpm",DIRECTORIO"Alien0b.xpm",DIRECTORIO"AlienExplode.xpm",pto=creaPos(pto)));//Crea vector marcianos		
 	}	
-
+*/
 	pto=PuntoBase;//Reset punto de referencia 
 	
 }
@@ -223,7 +244,7 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
  }
 /********************************************************************************/
 void Juego::cargaImagenes(){//Carga imagenes juego ... 88 imagenes  
-	wxImage tmp;//una imagen temporal
+	wxImage img;//una imagen temporal
 	wxDir dir(DIRECTORIO);//Directorio de imagenes
 
 	if ( !dir.IsOpened() ){cout <<" ERROR IMAGENES " ;exit (0);return;}//Error directorio immagen !!!!
@@ -233,21 +254,25 @@ void Juego::cargaImagenes(){//Carga imagenes juego ... 88 imagenes
 	wxString filespec="*.xpm";//Extension a cargar
 	int flags=wxDIR_DEFAULT;
 	
-	bool cont = dir.GetFirst(&filename, filespec, flags);//Numero de ficheros a cargar
+	bool cont = dir.GetFirst(&filename, filespec, flags);
 
 	while ( cont )
 	{
-		//cout <<filename<<endl;//Nombre ficheros
-		cont = dir.GetNext(&filename);//Existe otro fichero ?
+		cout <<"Fichero cargado = "<<filename<<endl;//Nombre ficheros
+		cont = dir.GetNext(&filename);//bool .Existe otro fichero ?
 		
-		tmp.LoadFile(DIRECTORIO"*.xpm", wxBITMAP_TYPE_XPM); 		
-		imagenes.push_back( base{tmp,filename});	//Carga el fichero imagen		
+		img.LoadFile(DIRECTORIO+filename, wxBITMAP_TYPE_XPM); //Carga imagen xpm 
+		
+		if (img.IsOk()) {cout <<" ok "<<endl;}		
+		else {cout <<" NO CARGADO "<<endl;}
+		
+		gameImg.push_back( base {img,filename} );	//Carga el fichero imagen		
 	}
 }
 /********************************************************************************/
 wxImage Juego::buscaImagen(wxString nombre){//Busca en el vector de imagenes por su nombre 
-	for (auto img:imagenes){//Recorre el vector de imagenes,nombre
-		if(img.ref==nombre){return img.img;}//Si en cuentra la imagen , la devuelve
+	for (auto& img:gameImg){//Recorre el vector de imagenes,nombre
+		if((img.ref).Cmp(nombre)==0){return img.img;}//Si en cuentra la imagen , la devuelve
 	}
-	return imagenes[0].img;//No imagen  0 ...un asterisco
+	return gameImg[0].img;//No imagen  0 ...un asterisco
  }

@@ -51,7 +51,7 @@ class Juego :public wxPanel{
     //Disparos de los marcianos
     vector <wxPoint> naveDisp;//Disparos nave 
     vector <wxPoint> marcianoDisp;//Disparos marcianos  
-    vector <base> imagenes;//Imagenes del juego  
+    vector <base> gameImg;//Imagenes del juego  
     
     menus menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos

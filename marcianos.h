@@ -27,7 +27,8 @@ class Marciano{
 	public:
 	
 	Marciano();
-	Marciano(wxString posA,wxString posB,wxString exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor 	
+	Marciano(wxString posA,wxString posB,wxString exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor A
+	Marciano(wxImage posA,wxImage posB,wxImage exp, wxPoint pt,wxBitmapType format=wxBITMAP_TYPE_XPM);//Constructor B		
 	bool getVivo();
 	void setVivo(bool estado);//vivo =true o false	
 	wxImage getImagen(bool img);//Utiliza imgA o imgB segun bool
