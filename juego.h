@@ -15,31 +15,33 @@
 
 #define DIRECTORIO "./spaceInvaders/"
 
+/****************************************************************************/	
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
-
+/****************************************************************************/	
 class Juego :public wxPanel{
 	public:
 	Juego (wxFrame* parent); //Constructor del Juego
+		
+	private:
+	wxTimer m_timer;	
+	void OnTimer(wxTimerEvent& event);//Timer 
+    int marcianoTimer;	
 	
 	//Dibujo
-	void OnTimer(wxTimerEvent& event);//Timer
     void paintEvent(wxPaintEvent & evt);
     void paintNow();
     void OnSize(wxSizeEvent& event);
-    void OnTecla(wxKeyEvent& event);//Evento teclas ...
-    void render(wxDC& dc);
-    wxPoint creaPos(wxPoint pto);//crea coordenadas marciano construccion
-    bool limites();//Han llegado a la derecha o a la izquierda los marcianos ?
-    bool limiteInferior();//Han llegado abajo ? Han ganado los marcianos ?   
-	void disparoNave(bool disparo=false);//Gestiona el disparo de la nave
-		
-	private:
-	wxTimer m_timer;
-	bool colision(wxPoint a,wxPoint b);//Objetos o puntos en colision ?
-    int marcianoTimer;
+    void render(wxDC& dc);	
+
+
     int score1,score2;//Puntos a enviar a menus 
     wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
+    
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
+    wxPoint creaPos(wxPoint pto);//crea coordenadas marciano construccion    
+    bool limites();//Han llegado a la derecha o a la izquierda los marcianos ?
+    bool limiteInferior();//Han llegado abajo ? Han ganado los marcianos ?  
+        
     vector <wxPoint> naveDisp;//Disparos nave 
     vector <wxPoint> marcianoDisp;//Disparos marcianos  
     vector <base> gameImg;//Imagenes del juego  
@@ -48,7 +50,13 @@ class Juego :public wxPanel{
     bool sentido;//sentido del movimiento de los marcianos
     bool imgActual;//imagen que utiliza el marciano imgA o imgB
     void resetMarcianos();//Posicion inicial ,vidas ..
-    void ctrlNave(int ctrl);//Controla 1 izq 2 der 3 dispara 
+    
+    void OnTecla(wxKeyEvent& event);//Evento teclas ...
+    void ctrlNave(int ctrl);//Controla movimiento nave 1 izq 2 der 3 dispara 
+    void disparoNave(bool disparo=false);//Gestiona el disparo de la nave
+	bool colision(wxPoint a,wxPoint b);//Objetos o puntos en colision ?  
+    bool colisionObjeto(Marciano& objeto,vector<wxPoint>& v);//Un objeto marciano o derivado toca un wxPoint	  
+    
     void cargaImagenes();//Carga imagenes juego ...
     wxImage buscaImagen(wxString nombre);//Busca en el vector de imagenes por su nombre 
     wxClientDC clienteDC;
