@@ -14,10 +14,10 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
-
 	for (int n=1;n<=11;n++){//Crea 1era. linea
 		marcianos.push_back( Marciano(buscaImagen("Alien3.xpm"),buscaImagen("Alien3b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
 	}
+
 
 	for (int n=12;n<=22;n++){//Crea 2a. linea
 		marcianos.push_back(Marciano(buscaImagen("Alien1.xpm"),buscaImagen("Alien1b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
@@ -106,7 +106,6 @@ void Juego::OnSize(wxSizeEvent& event){
 /********************************************************************************/
 void Juego::render(wxDC& dc){
 
-
 	dc.SetBackground( *wxBLACK );//FONDO PANTALLA NEGRO
 	wxBrush brocha(*wxBLACK,wxBRUSHSTYLE_SOLID );
 	dc.SetBrush (brocha);
@@ -126,8 +125,8 @@ void Juego::render(wxDC& dc){
 	
 	//Dibuja disparo
 	if (!naveDisp.empty()){//Si hay disparos en el vector
-		for (auto disp:naveDisp){//lee el vector de disparo						
-			dc.DrawPoint(disp);//...los dibuja ..			
+		for (auto disp:naveDisp){//lee el vector de disparos								
+			dc.DrawBitmap(buscaImagen("PlayerShotSpr.xpm"),disp);//dibuja disparo
 		}
 	}
 
@@ -140,10 +139,21 @@ void Juego::render(wxDC& dc){
 	
     //Dibuja marcianos .Desde el vector hasta la pantalla  wxDC
     for (auto& et:marcianos){
+		
 		//Disparo de nave toca marciano ?
-		colisionObjeto(et,naveDisp);//Test disparo Marciano , vector
-		dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);
-		}   
+		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado el marciano
+			dc.DrawBitmap(buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano			
+			et.setVivo(false);//Esta muerto ....
+			//destruye el misil
+			naveDisp.pop_back();
+			cout <<" Muerto "<<endl;
+		}			
+
+		if (et.getVivo()){//Si esta vivo se muestra la imagen
+			dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);
+		}
+					
+	}   
       
 	/****************************************************************************/	      
 	
@@ -215,7 +225,6 @@ void Juego::ctrlNave(int ctrl){//Controla movimiento nave 1 izq 2 der 3 dispara
 /********************************************************************************/
 void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 	//lee el vector de disparo
-	//mira si colisiona
 	//mira su fin
 	//destruye pop
 	if (disparo) { //introduce un disparo en el vector
@@ -225,13 +234,11 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 		
 	if (!naveDisp.empty()){//hay disparos en el vector ?
 		
-		//mira todo el vector bucle 
+		//recorre todo el vector bucle decrementado la posicion
 		for (auto& disp:naveDisp){//lee el vector de disparos referencia !!!!
 			disp.y-=10;//decrementa y 
-			if (disp.y<=70){naveDisp.pop_back();}//ver si ha llegado al final y==0
-		
-		//ver si colisiona con marciano
-		
+			if (disp.y<=70){
+				naveDisp.pop_back();}//ver si ha llegado al final y==0		
 		}
 	} 	
  }
@@ -265,10 +272,12 @@ void Juego::cargaImagenes(){//Carga imagenes juego ... 88 imagenes
 }
 /********************************************************************************/
 wxImage Juego::buscaImagen(wxString nombre){//Busca en el vector de imagenes por su nombre 
+	if (nombre==" ")
 	for (auto& img:gameImg){//Recorre el vector de imagenes,nombre
 		if((img.ref).Cmp(nombre)==0){return img.img;}//Si en cuentra la imagen , la devuelve
-	}
-	return gameImg[0].img;//No imagen  0 ...un asterisco
+	} 
+	
+	return gameImg[0].img;//No imagen  0 ...un asterisco space.xpm 
  }
 /********************************************************************************/
 
@@ -287,15 +296,12 @@ bool Juego::colisionObjeto (Marciano& objeto,vector<wxPoint>& v){//Un objeto mar
 
 /********************************************************************************/
 bool Juego::colision(wxPoint a,wxPoint b){//Objetos o puntos en colision 
-	//La base del marciano es a 80x40 ,el disparo b  
+	//La base del marciano es a 80x40 ,hay un margen de 10 pixels +o- a cada lado
 	//Si el disparo esta dentro del cuadrado 80x40 esta tocado
-	
-	//marciano a a.x a a.x+80 , b.y a b+40
  
-	if ( (b.x) >= (a.x) && b.x <=(a.x+80) && //x
+	if ( (b.x) >= (a.x+10) && b.x <=(a.x+70) && //x los bordes no son la imagen
 		 (b.y) >= (a.y) && b.y <= (a.y+40) //y
-	
-	 ){cout <<" tocado "<<endl;return true;}
+		){return true;}
 	
 	return false;
 }
