@@ -145,8 +145,8 @@ void Juego::render(wxDC& dc){
 			dc.DrawBitmap(buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano			
 			et.setVivo(false);//Esta muerto ....
 			//destruye el misil
+
 			naveDisp.pop_back();
-			cout <<" Muerto "<<endl;
 		}			
 
 		if (et.getVivo()){//Si esta vivo se muestra la imagen
@@ -272,7 +272,7 @@ void Juego::cargaImagenes(){//Carga imagenes juego ... 88 imagenes
 }
 /********************************************************************************/
 wxImage Juego::buscaImagen(wxString nombre){//Busca en el vector de imagenes por su nombre 
-	if (nombre==" ")
+		
 	for (auto& img:gameImg){//Recorre el vector de imagenes,nombre
 		if((img.ref).Cmp(nombre)==0){return img.img;}//Si en cuentra la imagen , la devuelve
 	} 

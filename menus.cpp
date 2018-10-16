@@ -13,9 +13,14 @@ wxBitmap menus::asciiToimage(wxString nombre){//Una ascii  devuelve su imagen co
 }
 /********************************************************************************/
 void menus::stringToImage(wxString texto,wxDC& dc,int x,int y){//"SCORE<1> HI-SCORE SCORE<2>"
+
 	for (char letra:texto){
 		x+=40;
-		dc.DrawBitmap(asciiToimage(letra),(x),y,true);		
+		if (!(letra==' ')) {
+			dc.DrawBitmap(asciiToimage(letra),(x),y,true);//letra o numero 		
+		}else {
+			dc.DrawBitmap(asciiToimage("space"),(x),y,true);//Espacio	
+		}
 	}
 }
 /********************************************************************************/
