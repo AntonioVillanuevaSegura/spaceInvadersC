@@ -114,7 +114,7 @@ void Juego::render(wxDC& dc){
 	/****************************************************************************/	
     //Dibuja informacion de fondo de pantalla score ...
     menu->stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
-    menu->scores(111,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
+    menu->scores(score1,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
     menu->dibujaLinea(0,740,1200,740,dc);//Linia divisora inferior 
     //wxString mystring = wxString::Format(wxT("%i"),myint);
     menu->stringToImage(wxString::Format(wxT("%i"),3)+"PP",dc,0,750);//escribe texto scores 1a. linea    
@@ -122,7 +122,7 @@ void Juego::render(wxDC& dc){
 	dc,700,750);//escribe texto scores 1a. linea      
 
 	/****************************************************************************/		
-	
+
 	//Dibuja disparo
 	if (!naveDisp.empty()){//Si hay disparos en el vector
 		for (auto disp:naveDisp){//lee el vector de disparos								
@@ -141,12 +141,13 @@ void Juego::render(wxDC& dc){
     for (auto& et:marcianos){
 		
 		//Disparo de nave toca marciano ?
-		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado el marciano
-			dc.DrawBitmap(buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano			
+		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado un marciano vivo ?			 
+			dc.DrawBitmap(buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano	
 			et.setVivo(false);//Esta muerto ....
 			//destruye el misil
-
 			naveDisp.pop_back();
+			//aumenta puntos 
+			score1+=10 ;//Sube 10 puntos general
 		}			
 
 		if (et.getVivo()){//Si esta vivo se muestra la imagen
@@ -285,13 +286,11 @@ bool Juego::colisionObjeto (Marciano& objeto,vector<wxPoint>& v){//Un objeto mar
 
 	if (v.empty() ){return false;}//No hay disparos 
 
-
-	for (auto disparo:v){//recorre el vector de disparos 
-		
-		if ( colision(objeto.getPosicion(),disparo)) {return true;}
+	for (auto disparo:v){//recorre el vector de disparos 		
+		if ( colision(objeto.getPosicion(),disparo)) {return true;}//alcanzado 
 	}
 
-	return false;
+	return false;//No ha sido alcanzado
 }
 
 /********************************************************************************/

@@ -16,8 +16,7 @@ class Marciano{
 	protected:
     wxImage marcianoA,marcianoB,explosion;//cargar  imagenes 
 	wxPoint pt;//Posicion marciano
-	bool vivo;//Esta vivo o muerto ?
-	int factor;//factor de ampliacion en la reescala
+	bool vivo;//Esta vivo o muerto ?	
 	
 	public:
 	Marciano();
@@ -25,8 +24,7 @@ class Marciano{
 	bool getVivo();
 	void setVivo(bool estado);//vivo =true o false	
 	wxImage getImagen(bool img);//Utiliza imgA o imgB segun bool
-	wxPoint getPosicion();
-	void DebugMarciano();//Para ver informacion 	
+	wxPoint getPosicion();	
 	void setPosicion(wxPoint pto);	
 };
 /***************************  DEFINICIONES  *************************************/

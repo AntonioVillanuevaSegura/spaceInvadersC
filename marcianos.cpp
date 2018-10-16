@@ -16,8 +16,4 @@ void Marciano::setPosicion(wxPoint pto){this->pt=pto;}
 /********************************************************************************/	
 bool Marciano::getVivo(){return vivo;}
 /********************************************************************************/	
-void Marciano::DebugMarciano(){//Para ver informacion 
-	cout <<" x ="<<getPosicion().x<<" , y = "<<getPosicion().y<<endl;
-}
-
 void Marciano::setVivo(bool estado){vivo=estado;}//vivo =true o false
