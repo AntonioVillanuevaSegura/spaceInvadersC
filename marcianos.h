@@ -15,9 +15,7 @@ using namespace std;
 class Marciano{
 	protected:
     wxImage marcianoA,marcianoB,explosion;//cargar  imagenes 
-    wxBitmap resize;
 	wxPoint pt;//Posicion marciano
-	wxPoint disparo;//Posicion del disparo
 	bool vivo;//Esta vivo o muerto ?
 	int factor;//factor de ampliacion en la reescala
 	
