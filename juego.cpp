@@ -23,7 +23,6 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 		marcianos.push_back( Marciano(menu->buscaImagen("Alien3.xpm"),menu->buscaImagen("Alien3b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
-
 	for (int n=12;n<=22;n++){//Crea 2a. linea 12-22
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
@@ -39,7 +38,7 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 	for (int n=45;n<=55;n++){//Crea 5a. linea 45-55
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}		
-	
+
 	//Construye la nave 
 	nave=new Nave(menu->buscaImagen("PlayerSprite.xpm"),menu->buscaImagen("PlayerSprite0.xpm"),menu->buscaImagen("PlayerSprite1.xpm"),wxPoint(600,675)); //Inicializa la nave 
 
@@ -87,15 +86,17 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 			et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
 			
 	//Dispara el marciano ?		
-			if (marcianoDispara()){//disparo aleatorio
-				
+			if (marcianoDispara()){//disparo aleatorio de un marciano
+				disparoNave(marcianoDisp,et.getPosicion(),true);//Gestiona el disparo de un marciano				
 			}
 		}	
 	}
 	
-	//Control disparos 
-	disparoNave(naveDisp,false);//Mira el vector de disparos de la nave
-	disparoNave(marcianoDisp,false);//Mira el vector de disparos de marcianos
+	//Control disparos nave y marcianos 
+	
+	vectorDisparo(naveDisp,true);//Mueve los misiles dentro de un vector de tiro
+	vectorDisparo(marcianoDisp,false);//Mueve los misiles dentro de un vector de tiro		
+
 			
 	paintNow();//parpadeo ....
 }
@@ -237,7 +238,7 @@ void Juego::ctrlNave(int ctrl){//Controla movimiento nave 1 izq 2 der 3 dispara
 	switch (ctrl){
 		case 1:tmp.x-=5;break;//izq.
 		case 2:tmp.x+=5;break;//derch.
-		case 3:disparoNave(naveDisp,true);break;//disparo	
+		case 3:disparoNave(naveDisp,nave->getPosicion(),true);break;//disparo de la nave 
 	}
 	//analisis limites de la nave 0-1200 
 	if (tmp.x<=0){tmp.x=0;}
@@ -247,17 +248,18 @@ void Juego::ctrlNave(int ctrl){//Controla movimiento nave 1 izq 2 der 3 dispara
 	paintNow();
 }
 /********************************************************************************/
-void Juego::disparoNave(vector <wxPoint>& v,bool disparo){//Gestiona el disparo de la nave
+void Juego::disparoNave(vector <wxPoint>& v,wxPoint pto,bool disparo){//Gestiona el disparo de la nave
 	//lee el vector de disparo
 	//mira su fin
 	//destruye pop
 	
 	if (disparo) { //introduce un disparo en el vector bool=true
-		naveDisp.push_back (nave->getPosicion());
-		naveDisp.back().x+=40;//Acceso ultimo elemento disparo ,central en la nave
+//		naveDisp.push_back (nave->getPosicion());
+		v.push_back (pto);
+		v.back().x+=40;//Acceso ultimo elemento disparo ,central en la nave
 		disparo=false;}
 		
-		vectorDisparo(naveDisp);//Gestiona el movimiento de un misil
+		vectorDisparo(v);//Gestiona el movimiento de un misil
  }
 /********************************************************************************/
 //Lo utilizan marcianos y la nave para mover misiles 
@@ -266,7 +268,8 @@ void Juego::vectorDisparo(vector <wxPoint>& v,bool tipo){//Mueve los misiles den
 		if (!v.empty()){//hay disparos en el vector ?
 
 		for (auto& disp:v){//lee el vector de disparos referencia !!!!
-			tipo ? disp.y-=10 : disp.y+=10 ;//decrementa y 
+			tipo ? disp.y-=10 : disp.y+=10 ;//decrementa o incrementa Y segun sea el marciano o la nave que disp.
+			//Vigila los limites del tiro segun sea marciano o nave
 			if ( tipo ? disp.y<=70 : disp.y>=LIMITE_INFERIOR){v.pop_back();}//ver si ha llegado al final y==0
 		}
 	} 	
@@ -294,9 +297,10 @@ bool Juego::colision(wxPoint a,wxPoint b){//Objetos o puntos en colision
 		){return true;}	
 	return false;
 }
-  
+/********************************************************************************/  
 bool Juego::marcianoDispara(){//Disparo aleatorio de un alien 
 	int num= rand() % 10 + 1; //numero entre 1 y 10 
 	if (num%2 ==0){return true;}
 	return false; 
 }
+/********************************************************************************/

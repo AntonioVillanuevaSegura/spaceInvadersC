@@ -58,7 +58,7 @@ class Juego :public wxPanel{
     
     void OnTecla(wxKeyEvent& event);//Evento teclas ...
     void ctrlNave(int ctrl);//Controla movimiento nave 1 izq 2 der 3 dispara 
-    void disparoNave(vector <wxPoint>& v,bool disparo=false);//Gestiona el disparo de la nave
+    void disparoNave(vector <wxPoint>& v,wxPoint pto,bool disparo=false);//Gestiona el disparo de la nave
 	bool colision(wxPoint a,wxPoint b);//Objetos o puntos en colision ?  
     bool colisionObjeto(Marciano& objeto,vector<wxPoint>& v);//Un objeto marciano o derivado toca un wxPoint
     bool marcianoDispara();//Disparo aleatorio de un alien  
