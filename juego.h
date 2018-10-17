@@ -12,8 +12,9 @@
 #include <wx/dcclient.h>
 //#include <wx/brush>
 //#include <wx/dir.h> //ver directorios ficheros
-
+#define PERSISTENCIA_EXPLOSION 2000
 #define VELOCIDAD_MARCIANOS 30
+struct pers {wxImage img;wxPoint pt;int tempo;};//Estructura con referencias del tipo de elemento
 
 /****************************************************************************/	
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
@@ -40,13 +41,15 @@ class Juego :public wxPanel{
     wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
     
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
+    vector <pers> persistencias ;//Una explosion persiste un tiempo luego se desaparece
+   
     wxPoint creaPos(wxPoint pto);//crea coordenadas marciano construccion    
     bool limites();//Han llegado a la derecha o a la izquierda los marcianos ?
     bool limiteInferior();//Han llegado abajo ? Han ganado los marcianos ?  
         
     vector <wxPoint> naveDisp;//Disparos nave 
-    vector <wxPoint> marcianoDisp;//Disparos marcianos  
-    vector <base> gameImg;//Imagenes del juego  
+    vector <wxPoint> marcianoDisp;//Disparos marcianos   
+    
     
     menus *menu;//Intancia del menu de fondo
     bool sentido;//sentido del movimiento de los marcianos

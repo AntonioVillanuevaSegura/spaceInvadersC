@@ -49,8 +49,8 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 	int x(0),y(0);	
 	
 	if (marcianoTimer>1000){marcianoTimer=0;}//reset inicial
-	if (marcianoTimer<velocidadMarcianos){marcianoTimer++;} //El tiempo marciano va mas lento que una bala 
 	
+	if (marcianoTimer<velocidadMarcianos){marcianoTimer++;} //El tiempo marciano va mas lento que una bala 	
 	else{
 	
 		marcianoTimer=0;//Reset
@@ -79,8 +79,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 		
 			//Nueva posicion del marciano en funcion del sentido
 			et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
-		}
-	
+		}	
 	}
 	
 	disparoNave(false);//Mira el vector de disparos
@@ -117,7 +116,7 @@ void Juego::render(wxDC& dc){
 	menu->pantallaJuego(score1,score2,vidas1,dc);//Dibuja textos pantalla principal
 
 	/****************************************************************************/		
-
+	
 	//Dibuja disparo
 	if (!naveDisp.empty()){//Si hay disparos en el vector
 		for (auto disp:naveDisp){//lee el vector de disparos								
@@ -138,6 +137,7 @@ void Juego::render(wxDC& dc){
 		//Disparo de nave toca marciano ?
 		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado un marciano vivo ?			 
 			dc.DrawBitmap(menu->buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano	
+			persistencias.push_back(pers {menu->buscaImagen("AlienExplode.xpm") , et.getPosicion() ,PERSISTENCIA_EXPLOSION});//Persiste
 			et.setVivo(false);//Esta muerto ....
 			//destruye el misil
 			naveDisp.pop_back();
@@ -147,7 +147,17 @@ void Juego::render(wxDC& dc){
 
 		if (et.getVivo()){//Si esta vivo se muestra la imagen
 			dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);
-		}					
+		}
+		
+		//Persistencia imagenes 
+		if (!persistencias.empty()){//Mira el vector de persistencias ,explosiones			
+			for (auto& p:persistencias){
+				if (p.tempo>0){
+					dc.DrawBitmap(p.img,p.pt,true);
+					p.tempo--;
+				}
+			}
+		}
 	}   
       
 	/****************************************************************************/	      
@@ -237,6 +247,8 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 		for (auto& disp:naveDisp){//lee el vector de disparos referencia !!!!
 			disp.y-=10;//decrementa y 
 			if (disp.y<=70){
+				//CREA UNA PERSISTENCIA ..... 
+				persistencias.push_back(pers {menu->buscaImagen("AlienExplode.xpm") ,wxPoint (disp.x,disp.y) ,PERSISTENCIA_EXPLOSION});//Persiste
 				naveDisp.pop_back();}//ver si ha llegado al final y==0		
 		}
 	} 	
