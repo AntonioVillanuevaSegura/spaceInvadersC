@@ -10,11 +10,12 @@
 #include <wx/timer.h> //timer
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
+#include <stdlib.h>     /* srand, rand */
 //#include <wx/brush>
 //#include <wx/dir.h> //ver directorios ficheros
 #define PERSISTENCIA_EXPLOSION 2000
+#define LIMITE_INFERIOR 600
 #define VELOCIDAD_MARCIANOS 30
-struct pers {wxImage img;wxPoint pt;int tempo;};//Estructura con referencias del tipo de elemento
 
 /****************************************************************************/	
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
@@ -41,7 +42,6 @@ class Juego :public wxPanel{
     wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
     
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos
-    vector <pers> persistencias ;//Una explosion persiste un tiempo luego se desaparece
    
     wxPoint creaPos(wxPoint pto);//crea coordenadas marciano construccion    
     bool limites();//Han llegado a la derecha o a la izquierda los marcianos ?
@@ -58,9 +58,11 @@ class Juego :public wxPanel{
     
     void OnTecla(wxKeyEvent& event);//Evento teclas ...
     void ctrlNave(int ctrl);//Controla movimiento nave 1 izq 2 der 3 dispara 
-    void disparoNave(bool disparo=false);//Gestiona el disparo de la nave
+    void disparoNave(vector <wxPoint>& v,bool disparo=false);//Gestiona el disparo de la nave
 	bool colision(wxPoint a,wxPoint b);//Objetos o puntos en colision ?  
-    bool colisionObjeto(Marciano& objeto,vector<wxPoint>& v);//Un objeto marciano o derivado toca un wxPoint	  
+    bool colisionObjeto(Marciano& objeto,vector<wxPoint>& v);//Un objeto marciano o derivado toca un wxPoint
+    bool marcianoDispara();//Disparo aleatorio de un alien  
+    void vectorDisparo(vector <wxPoint>& v,bool tipo=true);//Mueve los misiles dentro de un vector de tiro
 
     wxClientDC clienteDC;
     

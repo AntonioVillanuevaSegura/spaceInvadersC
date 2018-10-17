@@ -13,6 +13,9 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 	vidas2=3;//Vidas , numero de naves de cada jugador	
 
 	menu=new menus();//Inicializa menus ,carga imagenes del juego 
+	
+	/* Inicializa numeros aleatorios  */
+	srand (time(NULL));
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
@@ -57,6 +60,8 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 		
 		imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
 	
+	//Limites de los marcianos
+	
 		if (limites()){//Los marcianos estan en el limite <-der o izq -> ?		
 			sentido = !(sentido); //cambia el sentido de la marcha	DER IZQ	
 			//incrementa y  descienden
@@ -71,6 +76,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 	
 		if (limiteInferior()){resetMarcianos();vidas1--;} //Han llegado abajo reseteamos los marcianos	
 	
+	//Posiciona marcianos
 		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
 			
 			//Mueve marciano izq. o der.
@@ -79,11 +85,18 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 		
 			//Nueva posicion del marciano en funcion del sentido
 			et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
+			
+	//Dispara el marciano ?		
+			if (marcianoDispara()){//disparo aleatorio
+				
+			}
 		}	
 	}
 	
-	disparoNave(false);//Mira el vector de disparos
-		
+	//Control disparos 
+	disparoNave(naveDisp,false);//Mira el vector de disparos de la nave
+	disparoNave(marcianoDisp,false);//Mira el vector de disparos de marcianos
+			
 	paintNow();//parpadeo ....
 }
 /********************************************************************************/
@@ -135,29 +148,22 @@ void Juego::render(wxDC& dc){
     for (auto& et:marcianos){
 		
 		//Disparo de nave toca marciano ?
-		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado un marciano vivo ?			 
-			dc.DrawBitmap(menu->buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano	
-			persistencias.push_back(pers {menu->buscaImagen("AlienExplode.xpm") , et.getPosicion() ,PERSISTENCIA_EXPLOSION});//Persiste
-			et.setVivo(false);//Esta muerto ....
+		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado un marciano vivo ?		 
+			et.setVivo(false);//Esta muerto ....se activa persistencia explosion
 			//destruye el misil
 			naveDisp.pop_back();
 			//aumenta puntos 
 			score1+=10 ;//Sube 10 puntos por matar un marciano
-		}			
+		}		
+		
+		/****************************************************************************/		
 
 		if (et.getVivo()){//Si esta vivo se muestra la imagen
 			dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);
-		}
-		
-		//Persistencia imagenes 
-		if (!persistencias.empty()){//Mira el vector de persistencias ,explosiones			
-			for (auto& p:persistencias){
-				if (p.tempo>0){
-					dc.DrawBitmap(p.img,p.pt,true);
-					p.tempo--;
-				}
-			}
-		}
+		} else  if (et.Persistencia())//Si esta explotando 
+				{
+					dc.DrawBitmap(menu->buscaImagen("AlienExplode.xpm"),et.getPosicion(),true);
+				}			
 	}   
       
 	/****************************************************************************/	      
@@ -188,10 +194,14 @@ bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos 
 /********************************************************************************/
 bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
 	//Analiza  marciano inferior para analizar y 45-55
-		
-	//if (marcianos[45].getPosicion().y > 700 ){					
-	if (marcianos.back().getPosicion().y > 600 ){
-		return true;}	 
+	//Tiene que analizar el ultimo marciano de la pila vivo
+	std::vector<Marciano>::iterator it= marcianos.end();
+	
+	//Mirar desde atras el ultimo marciano con vida
+
+	while (it != marcianos.begin() && ! (it->getVivo()) ){--it;}//Mira primer mar. vivo
+
+	if (it->getPosicion().y > LIMITE_INFERIOR ){return true;}	 //Analiza el ultimo	
 	return false;	
 }
 /********************************************************************************/
@@ -203,10 +213,15 @@ void Juego::resetMarcianos(){//Posicion inicial marcianos,vidas ..
 	for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!						
 			et.setPosicion(pto=creaPos(pto));//Actualiza solo Y 
 			et.setVivo(true);//todos vivos
+			et.setPersistencia(10);//Valor de la persistencia cuando explota			
 		}
 				
-		//cambia el sentido de la marcha
-		sentido=true;	
+	//cambia el sentido de la marcha
+	sentido=true;	
+	
+	naveDisp.clear();
+	marcianoDisp.clear();
+		
 }
 /********************************************************************************/
 void Juego::OnTecla(wxKeyEvent& event){//Evento teclas ...
@@ -222,7 +237,7 @@ void Juego::ctrlNave(int ctrl){//Controla movimiento nave 1 izq 2 der 3 dispara
 	switch (ctrl){
 		case 1:tmp.x-=5;break;//izq.
 		case 2:tmp.x+=5;break;//derch.
-		case 3:disparoNave(true);break;//disparo	
+		case 3:disparoNave(naveDisp,true);break;//disparo	
 	}
 	//analisis limites de la nave 0-1200 
 	if (tmp.x<=0){tmp.x=0;}
@@ -232,30 +247,32 @@ void Juego::ctrlNave(int ctrl){//Controla movimiento nave 1 izq 2 der 3 dispara
 	paintNow();
 }
 /********************************************************************************/
-void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
+void Juego::disparoNave(vector <wxPoint>& v,bool disparo){//Gestiona el disparo de la nave
 	//lee el vector de disparo
 	//mira su fin
 	//destruye pop
-	if (disparo) { //introduce un disparo en el vector
+	
+	if (disparo) { //introduce un disparo en el vector bool=true
 		naveDisp.push_back (nave->getPosicion());
 		naveDisp.back().x+=40;//Acceso ultimo elemento disparo ,central en la nave
 		disparo=false;}
 		
-	if (!naveDisp.empty()){//hay disparos en el vector ?
-		
-		//recorre todo el vector bucle decrementado la posicion
-		for (auto& disp:naveDisp){//lee el vector de disparos referencia !!!!
-			disp.y-=10;//decrementa y 
-			if (disp.y<=70){
-				//CREA UNA PERSISTENCIA ..... 
-				persistencias.push_back(pers {menu->buscaImagen("AlienExplode.xpm") ,wxPoint (disp.x,disp.y) ,PERSISTENCIA_EXPLOSION});//Persiste
-				naveDisp.pop_back();}//ver si ha llegado al final y==0		
+		vectorDisparo(naveDisp);//Gestiona el movimiento de un misil
+ }
+/********************************************************************************/
+//Lo utilizan marcianos y la nave para mover misiles 
+void Juego::vectorDisparo(vector <wxPoint>& v,bool tipo){//Mueve los misiles dentro de un vector de tiro
+	
+		if (!v.empty()){//hay disparos en el vector ?
+
+		for (auto& disp:v){//lee el vector de disparos referencia !!!!
+			tipo ? disp.y-=10 : disp.y+=10 ;//decrementa y 
+			if ( tipo ? disp.y<=70 : disp.y>=LIMITE_INFERIOR){v.pop_back();}//ver si ha llegado al final y==0
 		}
 	} 	
- }
- 
-/********************************************************************************/
+} 
 
+/********************************************************************************/
 bool Juego::colisionObjeto (Marciano& objeto,vector<wxPoint>& v){//Un objeto marciano o derivado toca un wxPoint
 
 	if (v.empty() ){return false;}//No hay disparos 
@@ -271,11 +288,15 @@ bool Juego::colisionObjeto (Marciano& objeto,vector<wxPoint>& v){//Un objeto mar
 bool Juego::colision(wxPoint a,wxPoint b){//Objetos o puntos en colision 
 	//La base del marciano es a 80x40 ,hay un margen de 10 pixels +o- a cada lado
 	//Si el disparo esta dentro del cuadrado 80x40 esta tocado
- 
-	if ( (b.x) >= (a.x+10) && b.x <=(a.x+70) && //x los bordes no son la imagen
+
+	if ( (b.x) >= (a.x+12) && b.x <=(a.x+68) && //x los bordes no son la imagen
 		 (b.y) >= (a.y) && b.y <= (a.y+40) //y
-		){return true;}
-	
+		){return true;}	
 	return false;
 }
- 
+  
+bool Juego::marcianoDispara(){//Disparo aleatorio de un alien 
+	int num= rand() % 10 + 1; //numero entre 1 y 10 
+	if (num%2 ==0){return true;}
+	return false; 
+}

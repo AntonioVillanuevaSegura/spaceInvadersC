@@ -16,7 +16,8 @@ class Marciano{
 	protected:
     wxImage marcianoA,marcianoB,explosion;//cargar  imagenes 
 	wxPoint pt;//Posicion marciano
-	bool vivo;//Esta vivo o muerto ?	
+	bool vivo;//Esta vivo o muerto ?
+	int persistencia;//Temporizacion persistencia de la explosion	
 	
 	public:
 	Marciano();
@@ -25,7 +26,11 @@ class Marciano{
 	void setVivo(bool estado);//vivo =true o false	
 	wxImage getImagen(bool img);//Utiliza imgA o imgB segun bool
 	wxPoint getPosicion();	
-	void setPosicion(wxPoint pto);	
+	void setPosicion(wxPoint pto);
+		
+	bool Persistencia() ;//Mientras que este activo se muestra la explosion
+	void setPersistencia(int p=10);//Valor persistencia por defecto
+	
 };
 /***************************  DEFINICIONES  *************************************/
 #include "marcianos.cpp"
