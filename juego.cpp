@@ -8,35 +8,35 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 	SetBackgroundStyle(wxBG_STYLE_PAINT);	
 	m_timer.Start(4); // Intervalo timer 1000=1s
 	pto=PuntoBase;//Primer marciano posicion 
-	cargaImagenes();//Carga todas las imagenes del juego ...
-	//Inicializa menus
-	menu=new menus(gameImg);
+	velocidadMarcianos=VELOCIDAD_MARCIANOS;//Cada vez descienden a mas velocidad	
+
+	menu=new menus();//Inicializa menus ,carga imagenes del juego 
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
 	for (int n=1;n<=11;n++){//Crea 1era. linea
-		marcianos.push_back( Marciano(buscaImagen("Alien3.xpm"),buscaImagen("Alien3b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
+		marcianos.push_back( Marciano(menu->buscaImagen("Alien3.xpm"),menu->buscaImagen("Alien3b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
 
 	for (int n=12;n<=22;n++){//Crea 2a. linea
-		marcianos.push_back(Marciano(buscaImagen("Alien1.xpm"),buscaImagen("Alien1b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
 	for (int n=23;n<=33;n++){//Crea 3a. linea
-		marcianos.push_back(Marciano(buscaImagen("Alien1.xpm"),buscaImagen("Alien1b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
 	for (int n=34;n<=44;n++){//Crea 4a. linea
-		marcianos.push_back(Marciano(buscaImagen("Alien0.xpm"),buscaImagen("Alien0b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 
 	for (int n=45;n<=55;n++){//Crea 5a. linea
-		marcianos.push_back(Marciano(buscaImagen("Alien0.xpm"),buscaImagen("Alien0b.xpm"),buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
+		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}		
 	
 	//Construye la nave 
-	nave=new Nave(buscaImagen("PlayerSprite.xpm"),buscaImagen("PlayerSprite0.xpm"),buscaImagen("PlayerSprite1.xpm"),wxPoint(600,675)); //Inicializa la nave 
+	nave=new Nave(menu->buscaImagen("PlayerSprite.xpm"),menu->buscaImagen("PlayerSprite0.xpm"),menu->buscaImagen("PlayerSprite1.xpm"),wxPoint(600,675)); //Inicializa la nave 
 
 	pto=PuntoBase;//Reset punto de referencia 
 	
@@ -50,7 +50,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 	if (marcianoTimer<30){marcianoTimer++;} //El tiempo marciano va mas lento que una bala 
 	
 	else{
-		/*
+	
 		marcianoTimer=0;//Reset
 		
 		imgActual=!imgActual;//Imagen a utilizar la A o la B , brazo arriba o abajo 
@@ -78,7 +78,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 			//Nueva posicion del marciano en funcion del sentido
 			et.setPosicion(sentido ? wxPoint(x-10,y) : wxPoint(x+10,y));
 		}
-		*/
+	
 	}
 	
 	disparoNave(false);//Mira el vector de disparos
@@ -112,21 +112,14 @@ void Juego::render(wxDC& dc){
 	dc.Clear();
 		
 	/****************************************************************************/	
-    //Dibuja informacion de fondo de pantalla score ...
-    menu->stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
-    menu->scores(score1,222,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
-    menu->dibujaLinea(0,740,1200,740,dc);//Linia divisora inferior 
-    //wxString mystring = wxString::Format(wxT("%i"),myint);
-    menu->stringToImage(wxString::Format(wxT("%i"),3)+"PP",dc,0,750);//escribe texto scores 1a. linea    
-	menu->stringToImage (wxString ("credit "+(wxString::Format(wxT("%i"),14))),
-	dc,700,750);//escribe texto scores 1a. linea      
+	menu->pantallaJuego(score1,score2 ,dc);//Dibuja textos pantalla principal
 
 	/****************************************************************************/		
 
 	//Dibuja disparo
 	if (!naveDisp.empty()){//Si hay disparos en el vector
 		for (auto disp:naveDisp){//lee el vector de disparos								
-			dc.DrawBitmap(buscaImagen("PlayerShotSpr.xpm"),disp);//dibuja disparo
+			dc.DrawBitmap(menu->buscaImagen("PlayerShotSpr.xpm"),disp);//dibuja disparo
 		}
 	}
 
@@ -142,7 +135,7 @@ void Juego::render(wxDC& dc){
 		
 		//Disparo de nave toca marciano ?
 		if (colisionObjeto(et,naveDisp)  && et.getVivo()){ //Ha tocado un marciano vivo ?			 
-			dc.DrawBitmap(buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano	
+			dc.DrawBitmap(menu->buscaImagen("AlienExplode.xpm"),et.getPosicion()) ;//Explosion donde esta el marciano	
 			et.setVivo(false);//Esta muerto ....
 			//destruye el misil
 			naveDisp.pop_back();
@@ -176,6 +169,7 @@ bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos 
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
 	
 	if (marcianos[0].getPosicion().x <=2 || marcianos[10].getPosicion().x >=(1200-80)){
+		velocidadMarcianos-=5;//Cada vez descienden a mas velocidad
 		return true;
 	}
 	return false;
@@ -190,7 +184,8 @@ bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ?
 /********************************************************************************/
 void Juego::resetMarcianos(){//Posicion inicial marcianos,vidas ..
 	
-	pto=PuntoBase;//Primer marciano posicion 	
+	pto=PuntoBase;//Primer marciano posicion 
+	velocidadMarcianos=VELOCIDAD_MARCIANOS;//Cada vez descienden a mas velocidad
 	
 	for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!						
 			et.setPosicion(pto=creaPos(pto));//Actualiza solo Y 
@@ -243,43 +238,7 @@ void Juego::disparoNave(bool disparo){//Gestiona el disparo de la nave
 		}
 	} 	
  }
-/********************************************************************************/
-void Juego::cargaImagenes(){//Carga imagenes juego ... 88 imagenes  
-	wxImage img;//una imagen temporal
-	wxDir dir(DIRECTORIO);//Directorio de imagenes
-
-	if ( !dir.IsOpened() ){cout <<" ERROR IMAGENES " ;exit (0);return;}//Error directorio immagen !!!!
-	
-	//wxString filename;
-	wxString filename=DIRECTORIO;
-	wxString filespec="*.xpm";//Extension a cargar
-	int flags=wxDIR_DEFAULT;
-	
-	bool cont = dir.GetFirst(&filename, filespec, flags);
-
-	while ( cont )
-	{
-		//cout <<"Fichero cargado = "<<filename<<endl;//Nombre ficheros
-		cont = dir.GetNext(&filename);//bool .Existe otro fichero ?
-		
-		img.LoadFile(DIRECTORIO+filename, wxBITMAP_TYPE_XPM); //Carga imagen xpm 
-		
-		/*
-		if (img.IsOk()) {cout <<" ok "<<endl;}	 //Carga correcta ?............................	
-		else {cout <<" NO CARGADO "<<endl;}
-		*/
-		gameImg.push_back( base {img,filename} );	//Carga el fichero imagen		
-	}
-}
-/********************************************************************************/
-wxImage Juego::buscaImagen(wxString nombre){//Busca en el vector de imagenes por su nombre 
-		
-	for (auto& img:gameImg){//Recorre el vector de imagenes,nombre
-		if((img.ref).Cmp(nombre)==0){return img.img;}//Si en cuentra la imagen , la devuelve
-	} 
-	
-	return gameImg[0].img;//No imagen  0 ...un asterisco space.xpm 
- }
+ 
 /********************************************************************************/
 
 bool Juego::colisionObjeto (Marciano& objeto,vector<wxPoint>& v){//Un objeto marciano o derivado toca un wxPoint

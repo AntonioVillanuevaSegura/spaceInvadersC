@@ -11,9 +11,10 @@
 #include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
 //#include <wx/brush>
-#include <wx/dir.h> //ver directorios ficheros
+//#include <wx/dir.h> //ver directorios ficheros
 
 #define DIRECTORIO "./spaceInvaders/"
+#define VELOCIDAD_MARCIANOS 30
 
 /****************************************************************************/	
 const wxPoint PuntoBase(70,160);//Primera coordenada de un marciano
@@ -25,7 +26,8 @@ class Juego :public wxPanel{
 	private:
 	wxTimer m_timer;	
 	void OnTimer(wxTimerEvent& event);//Timer 
-    int marcianoTimer;	
+    int marcianoTimer;
+    int velocidadMarcianos;//Cada vez descienden a mas velocidad	
 	
 	//Dibujo
     void paintEvent(wxPaintEvent & evt);
@@ -56,9 +58,7 @@ class Juego :public wxPanel{
     void disparoNave(bool disparo=false);//Gestiona el disparo de la nave
 	bool colision(wxPoint a,wxPoint b);//Objetos o puntos en colision ?  
     bool colisionObjeto(Marciano& objeto,vector<wxPoint>& v);//Un objeto marciano o derivado toca un wxPoint	  
-    
-    void cargaImagenes();//Carga imagenes juego ...
-    wxImage buscaImagen(wxString nombre);//Busca en el vector de imagenes por su nombre 
+
     wxClientDC clienteDC;
     
     Nave *nave;//Una nave ....	
