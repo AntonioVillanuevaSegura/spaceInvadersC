@@ -8,30 +8,32 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 	SetBackgroundStyle(wxBG_STYLE_PAINT);	
 	m_timer.Start(4); // Intervalo timer 1000=1s
 	pto=PuntoBase;//Primer marciano posicion 
-	velocidadMarcianos=VELOCIDAD_MARCIANOS;//Cada vez descienden a mas velocidad	
+	velocidadMarcianos=VELOCIDAD_MARCIANOS;//Cada vez descienden a mas velocidad
+	vidas1=3;//Vidas , numero de naves de cada jugador
+	vidas2=3;//Vidas , numero de naves de cada jugador	
 
 	menu=new menus();//Inicializa menus ,carga imagenes del juego 
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
-	for (int n=1;n<=11;n++){//Crea 1era. linea
+	for (int n=1;n<=11;n++){//Crea 1era. linea 0-11
 		marcianos.push_back( Marciano(menu->buscaImagen("Alien3.xpm"),menu->buscaImagen("Alien3b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
 
-	for (int n=12;n<=22;n++){//Crea 2a. linea
+	for (int n=12;n<=22;n++){//Crea 2a. linea 12-22
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
-	for (int n=23;n<=33;n++){//Crea 3a. linea
+	for (int n=23;n<=33;n++){//Crea 3a. linea 23-33
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
-	for (int n=34;n<=44;n++){//Crea 4a. linea
+	for (int n=34;n<=44;n++){//Crea 4a. linea 34-44
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 
-	for (int n=45;n<=55;n++){//Crea 5a. linea
+	for (int n=45;n<=55;n++){//Crea 5a. linea 45-55
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}		
 	
@@ -47,7 +49,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 	int x(0),y(0);	
 	
 	if (marcianoTimer>1000){marcianoTimer=0;}//reset inicial
-	if (marcianoTimer<30){marcianoTimer++;} //El tiempo marciano va mas lento que una bala 
+	if (marcianoTimer<velocidadMarcianos){marcianoTimer++;} //El tiempo marciano va mas lento que una bala 
 	
 	else{
 	
@@ -67,7 +69,7 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 			}
 		}
 	
-		if (limiteInferior()){resetMarcianos();} //Han llegado abajo reseteamos los marcianos	
+		if (limiteInferior()){resetMarcianos();vidas1--;} //Han llegado abajo reseteamos los marcianos	
 	
 		for (auto& et:marcianos){//lee el vector de marcianos por referencia !!!!
 			
@@ -112,7 +114,7 @@ void Juego::render(wxDC& dc){
 	dc.Clear();
 		
 	/****************************************************************************/	
-	menu->pantallaJuego(score1,score2 ,dc);//Dibuja textos pantalla principal
+	menu->pantallaJuego(score1,score2,vidas1,dc);//Dibuja textos pantalla principal
 
 	/****************************************************************************/		
 
@@ -140,13 +142,12 @@ void Juego::render(wxDC& dc){
 			//destruye el misil
 			naveDisp.pop_back();
 			//aumenta puntos 
-			score1+=10 ;//Sube 10 puntos general
+			score1+=10 ;//Sube 10 puntos por matar un marciano
 		}			
 
 		if (et.getVivo()){//Si esta vivo se muestra la imagen
 			dc.DrawBitmap(et.getImagen(imgActual),et.getPosicion(),true);
-		}
-					
+		}					
 	}   
       
 	/****************************************************************************/	      
@@ -169,16 +170,18 @@ bool Juego::limites(){//Han llegado a la derecha o a la izquierda los marcianos 
 	//Analiza la primera linea de marcianos ha llegado al limite izq. o derch.
 	
 	if (marcianos[0].getPosicion().x <=2 || marcianos[10].getPosicion().x >=(1200-80)){
-		velocidadMarcianos-=5;//Cada vez descienden a mas velocidad
+		velocidadMarcianos-=7;//Cada vez descienden a mas velocidad
 		return true;
 	}
 	return false;
 }
 /********************************************************************************/
 bool Juego::limiteInferior(){//Han llegado abajo ? Han ganado los marcianos ? 
-	//Analiza  marciano inferior para analizar y 
-					
-	if (marcianos[44].getPosicion().y > PuntoBase.y + 80*10){return true;}	 
+	//Analiza  marciano inferior para analizar y 45-55
+		
+	//if (marcianos[45].getPosicion().y > 700 ){					
+	if (marcianos.back().getPosicion().y > 600 ){
+		return true;}	 
 	return false;	
 }
 /********************************************************************************/

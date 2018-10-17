@@ -3,7 +3,7 @@
 /********************************************************************************/
 /********************************************************************************/
 menus::menus(){//Constructor de la clase ,carga imagenes 
-	cargaImagenes();	
+	if (!cargaImagenes()){exit(0);}	
 }
 /********************************************************************************/
 wxBitmap menus::asciiToimage(wxString nombre){//Una ascii  devuelve su imagen correspondiente
@@ -28,7 +28,7 @@ void menus::stringToImage(wxString texto,wxDC& dc,int x,int y){//"SCORE<1> HI-SC
 /********************************************************************************/
 void menus::scores(int A,int B,wxDC& dc,int x,int y){//Escribe scores
 	stringToImage(to_string(A),dc,x,y);
-	stringToImage(to_string(B),dc,x+700,y);	
+	stringToImage(to_string(B),dc,880,y);	
 }
 /********************************************************************************/
 void menus::dibujaLinea(int x,int y,int xx,int yy,wxDC& dc){//Dibuja una linea de origen x,y y fin xx,yy
@@ -80,14 +80,14 @@ wxImage menus::buscaImagen(wxString nombre){//Busca en el vector de imagenes por
  }
  
  /********************************************************************************/
- void menus::pantallaJuego(int scoreA,int scoreB ,wxDC& dc){//Dibuja textos pantalla principal
+ void menus::pantallaJuego(int scoreA,int scoreB ,int vidas,wxDC& dc){//Dibuja textos pantalla principal
 	     //Dibuja informacion de fondo de pantalla score ...
     stringToImage("score<1> hi-score score<2>",dc);//escribe texto scores 1a. linea
-    scores(scoreA,scoreB,dc,160,80);   //escribe scores ... valor valor dc x y 2a. linea
+    scores(scoreA,scoreB,dc,160,50);   //escribe scores ... valor valor dc x y 2a. linea
     dibujaLinea(0,740,1200,740,dc);//Linia divisora inferior 
     
    //stringToImage(wxString::Format(wxT("%i"),3)+"PP",dc,0,750);//escribe texto scores 1a. linea    
-    // stringToImage(wxString::Format(wxT("%i"),3),dc,0,750);//texto numero de vidas ,naves
+     stringToImage(wxString::Format(wxT("%i"),vidas),dc,0,750);//texto numero de vidas ,naves
      dc.DrawBitmap(buscaImagen("PlayerSprite.xpm"),80*3,750,true);
     
 	stringToImage (wxString ("credit "+(wxString::Format(wxT("%i"),14))),dc,700,750);//escribe texto  

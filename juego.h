@@ -13,7 +13,6 @@
 //#include <wx/brush>
 //#include <wx/dir.h> //ver directorios ficheros
 
-#define DIRECTORIO "./spaceInvaders/"
 #define VELOCIDAD_MARCIANOS 30
 
 /****************************************************************************/	
@@ -37,6 +36,7 @@ class Juego :public wxPanel{
 
 
     int score1,score2;//Puntos a enviar a menus 
+    int vidas1,vidas2;//Vidas de cada jugador empieza a 3
     wxPoint pto;//Ultima coordenada de un marciano o referencia grupo
     
     vector <Marciano> marcianos;//Vector contiene todos los Marcianos

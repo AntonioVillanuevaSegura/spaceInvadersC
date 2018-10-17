@@ -27,7 +27,7 @@ class menus{
 	bool cargaImagenes();//Carga imagenes juego ... 88 imagenes  
 	wxImage buscaImagen(wxString nombre);//Busca en el vector de imagenes por su nombre 
 	
-	void pantallaJuego(int scoreA,int scoreB ,wxDC& dc);//Dibuja textos pantalla principal
+	void pantallaJuego(int scoreA,int scoreB ,int vidas,wxDC& dc);//Dibuja textos pantalla principal
 };
 
 /***************************  DEFINICIONES  *************************************/
