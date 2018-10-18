@@ -96,24 +96,12 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 				//mira y actual hay otras despues con vida?
 				//mira en un posible disparo si toca algo en y
 				
+			if (!(marcianoDelante(et.getPosicion() ,marcianos))) {//Detecta si NO hay otros delante
 				
-				
-				
-				
-				
-				//Integrar una funcion con esto
-				
-				for (int y=et.getPosicion().y ;y>=LIMITE_INFERIOR;y+=20){//simula disparo y
-					for (auto punto:marcianos){//Recorre todos los marcianos
-						colision (wxPoint(x+41,y),punto.getPosicion());
-					}
-				}
-
-				
-				
-				disparoNave(marcianoDisp,et.getPosicion(),true);//Gestiona el disparo de un marciano	
-							
+					disparoNave(marcianoDisp,et.getPosicion(),true);//Gestiona el disparo de un marciano	
+				}				
 			}
+			
 		}	
 	}
 	
@@ -335,20 +323,30 @@ bool Juego::colision(wxPoint a,wxPoint b){//Objetos o puntos en colision
 
 bool Juego::marcianoDispara(){//Disparo aleatorio de un alien 
 	int num= rand() % 10 + 1; //numero entre 1 y 10 
-	if (num%2 ==0){return true;}
+	//if (num%2 ==0){return true;}
+		if (num ==2){return true;} //Solo cuando es 2 
 	return false; 
 }
 /********************************************************************************/
-bool marcianoDelante(wxPoint a,vector <wxPoint>& v) {//Detecta si hay otros delante
-					//Integrar una funcion con esto
+bool Juego::marcianoDelante(wxPoint a,vector <Marciano>& v) {//Detecta si hay otros delante
+
+//Mirar la vertical del marciano Y para ver si hay otros marcianos
+//Analisis por [x posicion][y variable] o todo
+
+	int x=a.x;//Recupera x del marciano actual 
+	
+	for (int y=a.y ;y>=LIMITE_INFERIOR;y+=40){//simula disparo  a lo largo de Y en intervalo 20
+		
+		for (auto punto:v){//Recorre vector de marcianos				
+		//hay que mirar la misma x y si hay colision a lo largo de Y
 				
-	for (int y=a.y ;y>=LIMITE_INFERIOR;y+=20){//simula disparo y
-			for (auto punto:v){//Recorre todos los marcianos
-					//if (colision (wxPoint(x+41,y),punto.getPosicion())) {return true;}
-			}
+			//if ( (x== punto.getPosicion().x) && colision (wxPoint(x,y), punto.getPosicion()) && punto.getVivo() ) {return true;}//hay otro delante
+			if (x==punto.getPosicion().x && y==punto.getPosicion().y && punto.getVivo() ){return true;}
+			
+		}
 	}
 	
-	return false;//No hay otros en Y
+return false;//No hay otros en Y
 }
 
 /********************************************************************************/
