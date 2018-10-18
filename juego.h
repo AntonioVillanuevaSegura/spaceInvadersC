@@ -63,6 +63,7 @@ class Juego :public wxPanel{
     bool colisionObjeto(Marciano& objeto,vector<wxPoint>& v);//Un objeto marciano o derivado toca un wxPoint
     bool marcianoDispara();//Disparo aleatorio de un alien  
     void vectorDisparo(vector <wxPoint>& v,bool tipo=true);//Mueve los misiles dentro de un vector de tiro
+    bool marcianoDelante(wxPoint a,vector <wxPoint>& v) ;//Detecta si hay otros delante
 
     wxClientDC clienteDC;
     

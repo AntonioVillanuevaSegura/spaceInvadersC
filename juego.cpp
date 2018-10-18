@@ -19,23 +19,23 @@ Juego::Juego (wxFrame* parent):wxPanel(parent), m_timer(this, TIMER_ID),clienteD
 
 	//Crea un vector de marcianos con sus coordenadas .Crea 11 marcianos de 80x80 por linea 
 
-	for (int n=1;n<=11;n++){//Crea 1era. linea 0-11
+	for (int n=1;n<=11;n++){//Crea 1era. linea 0-10 = 11
 		marcianos.push_back( Marciano(menu->buscaImagen("Alien3.xpm"),menu->buscaImagen("Alien3b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos	
 	}
 
-	for (int n=12;n<=22;n++){//Crea 2a. linea 12-22
+	for (int n=12;n<=22;n++){//Crea 2a. linea 11-21 = 11
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
-	for (int n=23;n<=33;n++){//Crea 3a. linea 23-33
+	for (int n=23;n<=33;n++){//Crea 3a. linea 22-32 = 11
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien1.xpm"),menu->buscaImagen("Alien1b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 	
-	for (int n=34;n<=44;n++){//Crea 4a. linea 34-44
+	for (int n=34;n<=44;n++){//Crea 4a. linea 33-43 = 11
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}
 
-	for (int n=45;n<=55;n++){//Crea 5a. linea 45-55
+	for (int n=45;n<=55;n++){//Crea 5a. linea 44-54 = 11
 		marcianos.push_back(Marciano(menu->buscaImagen("Alien0.xpm"),menu->buscaImagen("Alien0b.xpm"),menu->buscaImagen("AlienExplode.xpm"),pto=creaPos(pto)));//Crea vector marcianos		
 	}		
 
@@ -87,16 +87,39 @@ void Juego::OnTimer(wxTimerEvent& event) //TIMER 1 SEGUNDO
 			
 	//Dispara el marciano ?		
 			if (marcianoDispara()){//disparo aleatorio de un marciano
-				disparoNave(marcianoDisp,et.getPosicion(),true);//Gestiona el disparo de un marciano				
+				//Primero mira que no hay marcianos delante en Y
+				//0-10
+				//11-21
+				//22-32
+				//33-43
+				//44-54
+				//mira y actual hay otras despues con vida?
+				//mira en un posible disparo si toca algo en y
+				
+				
+				
+				
+				
+				
+				//Integrar una funcion con esto
+				
+				for (int y=et.getPosicion().y ;y>=LIMITE_INFERIOR;y+=20){//simula disparo y
+					for (auto punto:marcianos){//Recorre todos los marcianos
+						colision (wxPoint(x+41,y),punto.getPosicion());
+					}
+				}
+
+				
+				
+				disparoNave(marcianoDisp,et.getPosicion(),true);//Gestiona el disparo de un marciano	
+							
 			}
 		}	
 	}
 	
-	//Control disparos nave y marcianos 
-	
+	//Control disparos nave y marcianos 	
 	vectorDisparo(naveDisp,true);//Mueve los misiles dentro de un vector de tiro
 	vectorDisparo(marcianoDisp,false);//Mueve los misiles dentro de un vector de tiro		
-
 			
 	paintNow();//parpadeo ....
 }
@@ -137,6 +160,16 @@ void Juego::render(wxDC& dc){
 			dc.DrawBitmap(menu->buscaImagen("PlayerShotSpr.xpm"),disp);//dibuja disparo
 		}
 	}
+
+
+	//Dibuja disparo marciano
+	if (!marcianoDisp.empty()){//Si hay disparos en el vector
+		for (auto disp:marcianoDisp){//lee el vector de disparos								
+			dc.DrawBitmap(menu->buscaImagen("PlungerShot1.xpm"),disp);//dibuja disparo
+		}
+	}
+
+
 
 	/****************************************************************************/	
 	
@@ -257,9 +290,8 @@ void Juego::disparoNave(vector <wxPoint>& v,wxPoint pto,bool disparo){//Gestiona
 //		naveDisp.push_back (nave->getPosicion());
 		v.push_back (pto);
 		v.back().x+=40;//Acceso ultimo elemento disparo ,central en la nave
-		disparo=false;}
-		
-		vectorDisparo(v);//Gestiona el movimiento de un misil
+		disparo=false;}		
+		//vectorDisparo(v);//Gestiona el movimiento de un misil
  }
 /********************************************************************************/
 //Lo utilizan marcianos y la nave para mover misiles 
@@ -298,9 +330,26 @@ bool Juego::colision(wxPoint a,wxPoint b){//Objetos o puntos en colision
 	return false;
 }
 /********************************************************************************/  
+
+//Dispara si delante no hay marcianos 
+
 bool Juego::marcianoDispara(){//Disparo aleatorio de un alien 
 	int num= rand() % 10 + 1; //numero entre 1 y 10 
 	if (num%2 ==0){return true;}
 	return false; 
 }
 /********************************************************************************/
+bool marcianoDelante(wxPoint a,vector <wxPoint>& v) {//Detecta si hay otros delante
+					//Integrar una funcion con esto
+				
+	for (int y=a.y ;y>=LIMITE_INFERIOR;y+=20){//simula disparo y
+			for (auto punto:v){//Recorre todos los marcianos
+					//if (colision (wxPoint(x+41,y),punto.getPosicion())) {return true;}
+			}
+	}
+	
+	return false;//No hay otros en Y
+}
+
+/********************************************************************************/
+
